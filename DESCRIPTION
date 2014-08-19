@@ -1,0 +1,20 @@
+Package: objectdiff
+Type: Package
+Title: Objectdiff
+Version: 0.1.0
+Description: Objectdiff is an R package for measuring differences
+    between arbitrary R objects using patches, a la Git. For example,
+    if you have slightly modified a data.frame, and you would like to
+    record the change, it would be more efficient to only record what
+    is different, rather than a full copy of both data sets.
+Author: Robert Krzyzanowski <technoguyrob@gmail.com>
+Maintainer: Robert Krzyzanowski <technoguyrob@gmail.com>
+Authors@R: c(person("Robert", "Krzyzanowski",
+    email = "technoguyrob@gmail.com", role = c("aut", "cre")))
+Depends:
+    R (>= 3.0.0)
+Suggests:
+    testthatsomemore
+License: MIT
+LazyData: true
+Roxygen: list(wrap = FALSE)
