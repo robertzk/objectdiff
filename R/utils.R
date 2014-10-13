@@ -1,6 +1,10 @@
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-identity_patch <- function(object) as.patch(function(...) ..1)
+identity_patch <- function(object) {
+  patch <- function(...) ..1
+  environment(patch) <- emptyenv()
+  patch
+}
 trivial_patch <- function(object) as.patch(function(...) object)
 
 as.patch <- function(x) {
