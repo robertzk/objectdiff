@@ -28,6 +28,7 @@ setClass('patch', contains = 'function')
 #' @import methods
 #' @export
 #' @examples
+#' \dontrun { # TODO: (RK) Run these when package is complete.
 #' iris2 <- iris[-1]
 #' stopifnot(identical(objectdiff(iris, iris2)(iris), iris))
 #'
@@ -43,6 +44,7 @@ setClass('patch', contains = 'function')
 #' # The patches record the history of how we got from beaver1 to beaver
 #' # We could go back to any previous step by applying only some of the
 #' # patches.
+#' }
 setGeneric("objectdiff",
   def = function(old_object, new_object, ...) standardGeneric("objectdiff"),
   valueClass = "patch")
