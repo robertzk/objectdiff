@@ -13,6 +13,11 @@ as.patch <- function(x) {
   x
 }
 
+bare <- function(x) {
+  attributes(x) <- NULL
+  unclass(unname(x))
+}
+
 benchmarks <- function(path) {
   find_benchmarks <- function(path) list.files(pattern = '^benchmark', path, full.names = TRUE)
 
