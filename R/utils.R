@@ -13,6 +13,11 @@ as.patch <- function(x) {
   x
 }
 
+bare <- function(x) {
+  attributes(x) <- NULL
+  unclass(unname(x))
+}
+
 benchmarks <- function(path) {
   if (missing(path)) {
     # TODO: (RK) Run all benchmarks in installed package.
