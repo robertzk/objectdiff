@@ -18,11 +18,11 @@ bare <- function(x) {
   unclass(unname(x))
 }
 
+<<<<<<< HEAD
 benchmarks <- function(path, filter = '') {
   find_benchmarks <- function(path) {
     files <- list.files(pattern = '^benchmark', path, full.names = TRUE)
     files[grepl(filter, files)]
-  }
 
   benchmarks <- find_benchmarks(
     if (missing(path)) system.file(package = 'objectdiff', 'benchmarks')
