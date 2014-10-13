@@ -14,9 +14,13 @@ as.patch <- function(x) {
 }
 
 benchmarks <- function(path) {
-  if (missing(path)) {
-    # TODO: (RK) Run all benchmarks in installed package.
-  } else {
-    # TODO: (RK) Run all benchmarks in dev mode.
-  }
+  find_benchmarks <- function(path) list.files(pattern = '^benchmark', path, full.names = TRUE)
+
+  benchmarks <- find_benchmarks(
+    if (missing(path)) system.file(package = 'objectdiff', 'benchmarks')
+    else file.path(path, 'inst', 'benchmarks')
+  )
+
+  invisible(lapply(benchmarks, source))
 }
+
