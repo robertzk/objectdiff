@@ -32,12 +32,12 @@ print(microbenchmark(
   "Call as.numeric" = as.numeric(y)
 , times = 5))
 
-
 # Unit: milliseconds
 #                                     expr      min       lq    median        uq       max neval
 #     Remove names and attributes directly 3.423476 3.997793  4.256173  4.416947  4.570352     5
 #  Remove names and attributes iteratively 3.654168 3.778606  4.987407  5.493629  5.664423     5
 #                 Allocate memory for copy 1.252063 1.355467  1.507160  1.960974 13.631622     5
 #                          Call as.numeric 4.386874 5.420174 19.486084 19.891346 20.759525     5
+
 # Not very good! We need to find another way... 
 
