@@ -18,7 +18,6 @@ bare <- function(x) {
   unclass(unname(x))
 }
 
-<<<<<<< HEAD
 benchmarks <- function(path, filter = '') {
   find_benchmarks <- function(path) {
     files <- list.files(pattern = '^benchmark', path, full.names = TRUE)
