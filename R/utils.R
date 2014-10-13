@@ -12,3 +12,11 @@ as.patch <- function(x) {
   class(x) <- c('patch', class(x))
   x
 }
+
+benchmarks <- function(path) {
+  if (missing(path)) {
+    # TODO: (RK) Run all benchmarks in installed package.
+  } else {
+    # TODO: (RK) Run all benchmarks in dev mode.
+  }
+}

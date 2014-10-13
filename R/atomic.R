@@ -6,4 +6,5 @@ setMethod('objectdiff', signature = c('numeric', 'numeric'),
     # TODO: (RK) Improve these heuristics.
     if (length(old_object) != length(new_object)) trivial_patch(new_object)
 
+
   })
