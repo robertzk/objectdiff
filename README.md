@@ -1,7 +1,7 @@
 Git-like object patching for R [![Build Status](https://travis-ci.org/robertzk/objectdiff.svg?branch=master)](https://travis-ci.org/robertzk/objectdiff)
 ==========
 
-Intended to be used in conjunction with caching [stagerunners](http://github.com/robertzk),
+Intended to be used in conjunction with caching [stagerunners](http://github.com/robertzk/stagerunner),
 the objectdiff package helps keep the recording of many operations on a data set concise.
 If you are munging a data set, it would be ideal to record the progress so you can "rewind"
 and interactively debug what happened in the past if you ever end up with a data set
