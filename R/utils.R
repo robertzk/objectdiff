@@ -18,10 +18,17 @@ bare <- function(x) {
   unclass(unname(x))
 }
 
-benchmarks <- function(path) {
-  if (missing(path)) {
-    # TODO: (RK) Run all benchmarks in installed package.
-  } else {
-    # TODO: (RK) Run all benchmarks in dev mode.
+benchmarks <- function(path, filter = '') {
+  find_benchmarks <- function(path) {
+    files <- list.files(pattern = '^benchmark', path, full.names = TRUE)
+    files[grepl(filter, files)]
   }
+
+  benchmarks <- find_benchmarks(
+    if (missing(path)) system.file(package = 'objectdiff', 'benchmarks')
+    else file.path(path, 'inst', 'benchmarks')
+  )
+
+  invisible(lapply(benchmarks, source))
 }
+
