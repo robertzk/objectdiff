@@ -18,3 +18,7 @@ Suggests:
 License: MIT
 LazyData: true
 Roxygen: list(wrap = FALSE)
+Collate:
+    'objectdiff.R'
+    'data.frame.R'
+    'objectdiff-package.r'
