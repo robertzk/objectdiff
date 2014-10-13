@@ -37,6 +37,7 @@ closures that record a minimal amount of information to convert one
 object to another.
 }
 \examples{
+\dontrun { # TODO: (RK) Run these when package is complete.
 iris2 <- iris[-1]
 stopifnot(identical(objectdiff(iris, iris2)(iris), iris))
 
@@ -52,5 +53,6 @@ stopifnot(identical(
 # The patches record the history of how we got from beaver1 to beaver
 # We could go back to any previous step by applying only some of the
 # patches.
+}
 }
 
