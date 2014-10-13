@@ -3,4 +3,3 @@
 export(objectdiff)
 exportClasses(patch)
 import(methods)
-import(testthatsomemore)

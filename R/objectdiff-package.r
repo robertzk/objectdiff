@@ -6,5 +6,5 @@
 #'
 #' @name objectdiff
 #' @docType package
-#' @import testthatsomemore
+## @import testthatsomemore
 NULL
