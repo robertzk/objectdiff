@@ -14,6 +14,7 @@ Authors@R: c(person("Robert", "Krzyzanowski",
 Depends:
     R (>= 3.0.0)
 Suggests:
+    testthat,
     testthatsomemore
 License: MIT
 LazyData: true

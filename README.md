@@ -1,4 +1,4 @@
-Git-like object patching for R
+Git-like object patching for R [![Build Status](https://travis-ci.org/robertzk/objectdiff.svg?branch=master)](https://travis-ci.org/robertzk/objectdiff)
 ==========
 
 Intended to be used in conjunction with caching [stagerunners](http://github.com/robertzk),
@@ -36,3 +36,5 @@ To install the latest development builds directly from GitHub, run this instead:
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("robertzk", "objectdiff")
 ```
+
+
