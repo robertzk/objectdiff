@@ -13,6 +13,8 @@ Authors@R: c(person("Robert", "Krzyzanowski",
     email = "technoguyrob@gmail.com", role = c("aut", "cre")))
 Depends:
     R (>= 3.0.0)
+Imports:
+    methods
 Suggests:
     testthat,
     microbenchmark
@@ -21,5 +23,7 @@ LazyData: true
 Roxygen: list(wrap = FALSE)
 Collate:
     'objectdiff.R'
+    'atomic.R'
     'data.frame.R'
     'objectdiff-package.r'
+    'utils.R'

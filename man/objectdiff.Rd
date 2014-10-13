@@ -10,7 +10,7 @@ if you have slightly modified a data.frame, and you would like to
 record the change, it would be more efficient to only record what
 is different, rather than a full copy of both data sets.}
 \usage{
-objectdiff(object1, object2, ...)
+objectdiff(old_object, new_object, ...)
 }
 \arguments{
 \item{old_object}{ANY. The "before" object.}
