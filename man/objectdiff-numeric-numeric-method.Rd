@@ -7,6 +7,12 @@
 \usage{
 \S4method{objectdiff}{numeric,numeric}(old_object, new_object)
 }
+\arguments{
+\item{old_object}{ANY. The "before" object.}
+
+\item{new_object}{ANY. The "new" object. These are usually a data.frame or
+an environment.}
+}
 \description{
 Transform a numeric into a numeric.
 }

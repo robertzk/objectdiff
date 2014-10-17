@@ -20,6 +20,7 @@ setClass('patch', contains = 'function')
 #' @param old_object ANY. The "before" object.
 #' @param new_object ANY. The "new" object. These are usually a data.frame or
 #'   an environment.
+#' @param ... future compatibility for extensions to this generic.
 #' @return a function that can transform \code{old_object} into \code{new_object},
 #'   but tries to keep memory foot print minimal. For example, if both are two
 #'   data.frame's of 100,000s of rows and 1,000s of columns, but the only change
@@ -28,7 +29,8 @@ setClass('patch', contains = 'function')
 #' @import methods
 #' @export
 #' @examples
-#' \dontrun { # TODO: (RK) Run these when package is complete.
+#' \dontrun{
+#' # TODO: (RK) Run these when package is complete.
 #' iris2 <- iris[-1]
 #' stopifnot(identical(objectdiff(iris, iris2)(iris), iris))
 #'

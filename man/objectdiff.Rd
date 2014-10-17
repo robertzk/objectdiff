@@ -17,6 +17,8 @@ objectdiff(old_object, new_object, ...)
 
 \item{new_object}{ANY. The "new" object. These are usually a data.frame or
 an environment.}
+
+\item{...}{future compatibility for extensions to this generic.}
 }
 \value{
 a function that can transform \code{old_object} into \code{new_object},
@@ -37,7 +39,8 @@ closures that record a minimal amount of information to convert one
 object to another.
 }
 \examples{
-\dontrun { # TODO: (RK) Run these when package is complete.
+\dontrun{
+# TODO: (RK) Run these when package is complete.
 iris2 <- iris[-1]
 stopifnot(identical(objectdiff(iris, iris2)(iris), iris))
 

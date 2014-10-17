@@ -1,14 +1,32 @@
+#' Patching related methods.
+#' 
+#' @param x function. Apply \code{patch} class.
+#'
+#' @name patch
+#' @title patch
+#' @rdname patch
+as.patch <- function(x) {
+  stopifnot(is.function(x))
+  class(x) <- c('patch', class(x))
+  x
+}
 
+#' @rdname patch
 identity_patch <- function() {
   patch <- function(...) ..1
   environment(patch) <- emptyenv()
   as.patch(patch)
 }
 
+#' @param object ANY. An R object that will be returned by the
+#'    function created from \code{trivial_patch}. This is equivalent to
+#'    "create a function that does nothing except return this object".
+#' @rdname patch
 trivial_patch <- function(object) as.patch(function(...) object)
 
 #' Generate a patch for two atomic objects that are close in values.
 #'
+#' @rdname patch
 #' @param old_object atomic. 
 #' @param new_object atomic. 
 #' @param transition logical. Whether or not to use a transition depending
@@ -51,6 +69,7 @@ atomic_differences_patch <- function(old_object, new_object, transition = TRUE) 
 #' (if any). Otherwise, given indices of changed object, it will 
 #' generate a patch over those indices.
 #' 
+#' @rdname patch
 #' @inheritParams atomic_differences_patch
 #' @param differences logical or integer. The differences in first and second object.
 #'   These should be calculated externally because a different approach
@@ -84,6 +103,7 @@ differences_patch <- function(old_object, new_object, differences) {
 #' Assume two objects are identical and only patch their attributes.
 #'
 #' @inheritParams atomic_differences_patch
+#' @rdname patch
 attributes_patch <- function(old_object, new_object) {
   patch <- function(object) {
     attributes(object) <- patch_attributes(attributes(object))
@@ -95,9 +115,3 @@ attributes_patch <- function(old_object, new_object) {
   as.patch(patch)
 }
 
-#' @rdname patch
-as.patch <- function(x) {
-  stopifnot(is.function(x))
-  class(x) <- c('patch', class(x))
-  x
-}

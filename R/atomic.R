@@ -1,5 +1,6 @@
 #' Transform a numeric into a numeric.
 #' 
+#' @inheritParams objectdiff
 #' @include objectdiff.R
 setMethod('objectdiff', signature = c('numeric', 'numeric'),
   definition = function(old_object, new_object) {
