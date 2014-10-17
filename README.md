@@ -22,7 +22,7 @@ The point here is that instead of storing *both* iris and iris2, which could
 get memory-prohibitive very quickly, we only need to store iris and its patch
 (or sequence of patches).
 
-If we applied ten different manipulations to a dat aset, we could keep a history of our changes
+If we applied ten different manipulations to a dataset, we could keep a history of our changes
 by storing the successive patches in conjunction with the initial data set. In essence,
 objectdiff aims to be a "Git for R data".
 

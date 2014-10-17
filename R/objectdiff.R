@@ -49,3 +49,9 @@ setGeneric("objectdiff",
   def = function(old_object, new_object, ...) standardGeneric("objectdiff"),
   valueClass = "patch")
 
+setMethod('objectdiff', signature = c('ANY', 'ANY'),
+  definition = function(old_object, new_object) {
+    trivial_patch(new_object)
+  })
+
+

@@ -23,6 +23,7 @@ print(microbenchmark(
   "1 million numerics" = identical(w1, z1),
   "1 million chars" = identical(w2, z2)
 ))
+
 # Lesson: Comparing characters is *really* slow
 
 # Unit: nanoseconds
@@ -37,3 +38,47 @@ print(microbenchmark(
 #  1 million numerics     828    1401.5    6138.5    7940   30903   100
 #     1 million chars 3239020 3385422.5 3571055.5 4357100 6963236   100
 
+
+#
+# What if two things are equal except for attributes and class?
+# We need some ways to check for that.
+
+unat <- function(y) { attributes(y) <- NULL; y }
+microbenchmark(all.equal(x,y), identical(x, y), identical(head(x,-1), head(y,-1)),
+               identical(unat(x), unat(y)))
+
+# Unit: nanoseconds
+#                                 expr      min         lq     median         uq       max neval
+#                      all.equal(x, y)   100956   225546.0   263571.5   293590.5    662754   100
+#                      identical(x, y)      901     3331.5     7947.5    10311.0     25113   100
+#  identical(head(x, -1), head(y, -1)) 12927407 16399260.0 23043983.0 28436341.5 218761241   100
+#          identical(unat(x), unat(y))  1835558  2348825.5  2511917.0  2936794.5  22979307   100
+
+# For character comparison, it takes 4x longer
+#          identical(unat(x), unat(y))  8352153  9224829.0 10499011.0 14747340.0 213376807   100
+# 
+
+# Maybe a good strategy then is to first sample 100 indices and see
+# if they match before doing the full comparison.
+
+# smp <- sample(seq_len(1000000), 100)
+
+microbenchmark(all.equal(unclass(x), unclass(y), check.attributes = FALSE),
+               for(i in smp) identical(.subset2(x, i), .subset2(y, i)))
+
+# Unit: microseconds
+#                                                        expr       min        lq     median uq         max        neval
+# all.equal(unclass(x), unclass(y), check.attributes = FALSE) 31587.659 37940.179 44013.4875 53668.0470 239773.415 100
+#    for (i in smp) identical(.subset2(x, i), .subset2(y, i))   146.883   196.441   228.7455 300.8225   500.595    100
+#                                   identical(x[smp], y[smp])     7.482    11.211    43.934    55.687   200.682    100
+
+
+
+
+
+# It seems like temporarily removing their attributes may be necessary.
+
+# It seems 
+# Once we know that two things are identical
+# we need to create a patch from one onto the other. It seems like the fastest way
+# to "drop" any 
