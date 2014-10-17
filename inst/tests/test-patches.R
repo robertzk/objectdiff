@@ -29,7 +29,17 @@ test_that('the atomic differences patch correctly changes one element only on sm
 })
 
 test_that('the atomic differences patch patches an identical vector with diff attributes', {
+  x <- seq_len(1000); y <- x; attr(y, 'blah') <- iris; class(y) <- c('foo', class(y))
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+
+test_that('the atomic differences patch patches a similar vector with diff attributes', {
   x <- seq_len(1000); y <- x; y[1] <- 5; attr(y, 'blah') <- iris; class(y) <- c('foo', class(y))
   expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+
+test_that('the atomic differences patch patches a similar vector with diff attributes without much memory use', {
+  x <- seq_len(10000); y <- x; y[1] <- 5; attr(y, 'blah') <- 'arr'; class(y) <- c('foo', class(y))
+  expect_less_than(as.integer(object.size(atomic_differences_patch(x, y))), 5000)
 })
 
