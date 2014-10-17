@@ -18,3 +18,8 @@ test_that('the atomic differences patch correctly does nothing on no change', {
   expect_identical(atomic_differences_patch(1:10, 1:10)(1:10), 1:10)
 })
 
+test_that('the atomic differences patch correctly changes one element only', {
+  x <- seq_len(1000); y <- x; y[1] <- 5
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+

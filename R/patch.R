@@ -31,7 +31,7 @@ atomic_differences_patch <- function(old_object, new_object, transition = TRUE) 
 
     use_trivial <- FALSE
     if (!identical(old_object[tested_indices], new_object[tested_indices])) {
-      differences <- which(old_object[tested_indices] != new_object[tested_indices])
+      differences <- old_object[tested_indices] != new_object[tested_indices]
       # If most values are different, just patch with the new object.
       if (mean(differences) > 0.5) use_trivial <- TRUE
     }
@@ -40,7 +40,7 @@ atomic_differences_patch <- function(old_object, new_object, transition = TRUE) 
     else { # objects differ by a non-100% amount. Patch the differences.
       # TODO: (RK) Can we make this faster with C++? Need to be careful about 
       # attributes and class.
-      differences_patch(new_object, old_object, old_object != new_object)
+      differences_patch(old_object, new_object, which(old_object != new_object))
     }
   }
 }
@@ -52,13 +52,14 @@ atomic_differences_patch <- function(old_object, new_object, transition = TRUE) 
 #' generate a patch over those indices.
 #' 
 #' @inheritParams atomic_differences_patch
-#' @param differences logical. The differences in first and second object.
+#' @param differences logical or integer. The differences in first and second object.
 #'   These should be calculated externally because a different approach
 #'   could be used for different objects (e.g., lists versus atomic;
 #'   in the former we would need \code{base::identical} on each element,
 #'   whereas in the latter we could use \code{base::`!=`}).
 differences_patch <- function(old_object, new_object, differences) {
-  if (sum(differences) == 0) {
+  if ((is.logical(differences) && sum(differences) == 0) ||
+      length(differences) == 0) {
     # Patch only attributes / class.
     attributes_patch(old_object, new_object)
   } else {
