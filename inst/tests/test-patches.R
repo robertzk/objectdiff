@@ -55,3 +55,8 @@ test_that('the atomic differences patch changes character vectors with a small m
   expect_less_than(as.integer(object.size(atomic_differences_patch(x, y))), 5000)
 })
 
+test_that('the atomic differneces patch changes logical vectors', {
+  x <- as.logical(rep(c(0, 1), 500000))
+  y <- x; y[1] <- TRUE; attr(y, 'blah') <- 'arr'; class(y) <- c('foo', class(y))
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
