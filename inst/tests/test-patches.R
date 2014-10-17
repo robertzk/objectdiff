@@ -28,3 +28,8 @@ test_that('the atomic differences patch correctly changes one element only on sm
   expect_identical(atomic_differences_patch(x, y)(x), y)
 })
 
+test_that('the atomic differences patch patches an identical vector with diff attributes', {
+  x <- seq_len(1000); y <- x; y[1] <- 5; attr(y, 'blah') <- iris; class(y) <- c('foo', class(y))
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+
