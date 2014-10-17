@@ -43,3 +43,15 @@ test_that('the atomic differences patch patches a similar vector with diff attri
   expect_less_than(as.integer(object.size(atomic_differences_patch(x, y))), 5000)
 })
 
+test_that('the atomic differences patch changes character vectors', {
+  x <- sample(letters, 1000000, replace = TRUE)
+  y <- x; y[1] <- 'z'; attr(y, 'blah') <- 'arr'; class(y) <- c('foo', class(y))
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+
+test_that('the atomic differences patch changes character vectors with a small memory footprint', {
+  x <- sample(letters, 1000000, replace = TRUE)
+  y <- x; y[1] <- 'z'; attr(y, 'blah') <- 'arr'; class(y) <- c('foo', class(y))
+  expect_less_than(as.integer(object.size(atomic_differences_patch(x, y))), 5000)
+})
+
