@@ -11,29 +11,37 @@ trivial_patch <- function(object) as.patch(function(...) object)
 #'
 #' @param old_object atomic. 
 #' @param new_object atomic. 
-##' @param transition logical. Whether or not to use a transition-
-##'    Namely, if over 
+#' @param transition logical. Whether or not to use a transition depending
+#'   on how many element do not match. Namely, if over 50% do not match in
+#'   from a random sample of 100 elements (so most of \code{new_object} is
+#'   probably different than \code{old_object}) then replace it completely
+#'   with a trivial patch; otherwise, perform a more subtle calculation
+#'   using \code{base::!=} and stores only exactly which elements changed.
 #' @examples
 #' x <- 1:10; y <- x; y[1] <- 5
 #' patch <- objectdiff:::atomic_differences_patch(x, y) 
 #' stopifnot(identical(y, patch(x)))
-atomic_differences_patch <- function(old_object, new_object, phase = FALSE) {
+atomic_differences_patch <- function(old_object, new_object, transition = TRUE) {
   # Our first strategy is to sample 100 values and compare them.
   # If they match, the objects are "probably" the same.
-  tested_indices <- sample(seq_len(length(new_object)), 100, replace = TRUE)
-
-  use_trivial <- FALSE
-  if (!identical(old_object[tested_indices], new_object[tested_indices])) {
-    differences <- which(old_object[tested_indices] != new_object[tested_indices])
-    # If most values are different, just patch with the new object.
-    if (mean(differences) > 0.5) use_trivial <- TRUE
-  }
-
-  if (use_trivial) trivial_patch(new_object)
-  else { # objects differ by a non-100% amount. Patch the differences.
-    # TODO: (RK) Can we make this faster with C++? Need to be careful about 
-    # attributes and class.
+  if (!isTRUE(transition))
     differences_patch(new_object, old_object, old_object != new_object)
+  else {
+    tested_indices <- sample(seq_len(length(new_object)), 100, replace = TRUE)
+
+    use_trivial <- FALSE
+    if (!identical(old_object[tested_indices], new_object[tested_indices])) {
+      differences <- which(old_object[tested_indices] != new_object[tested_indices])
+      # If most values are different, just patch with the new object.
+      if (mean(differences) > 0.5) use_trivial <- TRUE
+    }
+
+    if (use_trivial) trivial_patch(new_object)
+    else { # objects differ by a non-100% amount. Patch the differences.
+      # TODO: (RK) Can we make this faster with C++? Need to be careful about 
+      # attributes and class.
+      differences_patch(new_object, old_object, old_object != new_object)
+    }
   }
 }
 

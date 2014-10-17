@@ -14,4 +14,7 @@ test_that('the trivial patch patches a simple example correctly', {
     expect_identical(trivial_patch("the real deal")(obj), "the real deal")
 })
 
+test_that('the atomic differences patch correctly does nothing on no change', {
+  expect_identical(atomic_differences_patch(1:10, 1:10)(1:10), 1:10)
+})
 

@@ -26,4 +26,5 @@ Collate:
     'atomic.R'
     'data.frame.R'
     'objectdiff-package.r'
+    'patch.R'
     'utils.R'
