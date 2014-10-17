@@ -61,7 +61,7 @@ microbenchmark(all.equal(x,y), identical(x, y), identical(head(x,-1), head(y,-1)
 # Maybe a good strategy then is to first sample 100 indices and see
 # if they match before doing the full comparison.
 
-# smp <- sample(seq_len(1000000), 100)
+smp <- sample(seq_len(1000000), 100)
 
 microbenchmark(all.equal(unclass(x), unclass(y), check.attributes = FALSE),
                for(i in smp) identical(.subset2(x, i), .subset2(y, i)))

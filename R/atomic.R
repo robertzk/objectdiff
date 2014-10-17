@@ -1,4 +1,4 @@
-#' Transform a numeric into a numeric.
+#' Transform an atomic vector into an atomic vector.
 #' 
 #' @inheritParams objectdiff
 #' @include objectdiff.R
