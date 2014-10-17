@@ -18,7 +18,7 @@ object.size.environment <-
 
 print(microbenchmark(object.size(num), object.size(bigdf), object.size(bigfn),
   object.size(char), object.size(lst), object.size(nested_list),
-  object.size(super_nested_list)))
+  estimate_size(lst), object.size(super_nested_list)))
 print(microbenchmark(object.size(environment()), times = 1))
 
 # Unit: microseconds

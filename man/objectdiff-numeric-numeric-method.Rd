@@ -3,7 +3,7 @@
 \docType{methods}
 \name{objectdiff,numeric,numeric-method}
 \alias{objectdiff,numeric,numeric-method}
-\title{Transform a numeric into a numeric.}
+\title{Transform an atomic vector into an atomic vector.}
 \usage{
 \S4method{objectdiff}{numeric,numeric}(old_object, new_object)
 }
@@ -14,6 +14,6 @@
 an environment.}
 }
 \description{
-Transform a numeric into a numeric.
+Transform an atomic vector into an atomic vector.
 }
 
