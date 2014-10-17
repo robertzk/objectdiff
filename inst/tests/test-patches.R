@@ -23,3 +23,8 @@ test_that('the atomic differences patch correctly changes one element only', {
   expect_identical(atomic_differences_patch(x, y)(x), y)
 })
 
+test_that('the atomic differences patch correctly changes one element only on small vector', {
+  x <- seq_len(10); y <- x; y[1] <- 5
+  expect_identical(atomic_differences_patch(x, y)(x), y)
+})
+
