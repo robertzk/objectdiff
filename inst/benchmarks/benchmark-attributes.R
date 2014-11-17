@@ -44,8 +44,8 @@ print(microbenchmark(
 # We need some ways to check for that.
 
 unat <- function(y) { attributes(y) <- NULL; y }
-microbenchmark(all.equal(x,y), identical(x, y), identical(head(x,-1), head(y,-1)),
-               identical(unat(x), unat(y)))
+#microbenchmark(all.equal(x,y), identical(x, y), identical(head(x,-1), head(y,-1)),
+#               identical(unat(x), unat(y)))
 
 # Unit: nanoseconds
 #                                 expr      min         lq     median         uq       max neval

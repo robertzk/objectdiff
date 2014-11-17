@@ -22,3 +22,17 @@ print(microbenchmark(
 #  base::identical on numerics 812 906.0  964.5 1058  2669   100
 #
 
+# Vectorized identicality
+x <- as.list(1:20000)
+y <- as.list(1:20000)
+y[[1000]] <- 1
+print(microbenchmark(
+  "Identical check using Map"    = Map(identical, x, y),
+  "Identical check using mapply" = mapply(identical, x, y)
+))
+
+# Unit: milliseconds
+#                          expr      min       lq   median       uq       max neval
+#     Identical check using Map 37.20443 42.76116 47.18948 51.38830 116.86836   100
+#  Identical check using mapply 43.61590 50.57991 56.57245 60.28356  86.80098   100
+

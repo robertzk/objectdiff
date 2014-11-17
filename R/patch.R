@@ -82,6 +82,11 @@ differences_patch <- function(old_object, new_object, differences) {
     # Patch only attributes / class.
     attributes_patch(old_object, new_object)
   } else {
+    if (is.logical(differences)) {
+      # Takes up much less space for sparse differences.
+      differences <- which(differences)
+    }
+
     patch <- new('function')
     formals(patch) <- alist(object = )
     body(patch) <- quote({ object[differences] <- new_values })
