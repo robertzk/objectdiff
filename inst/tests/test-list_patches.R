@@ -42,3 +42,11 @@ test_that('it can patch an attribute change', {
   expect_diff(x, y)
 })
 
+test_that('it can patch a small attribute change with a small patch', {
+  x <- as.list(1:10)
+  attr(x, 'blue') <- as.list(1:10000)
+  y <- x
+  attr(y, 'blue')[[5000]] <- 1
+
+  expect_diff(x, y, small = 5000)
+})
