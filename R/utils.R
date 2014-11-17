@@ -25,8 +25,13 @@ expect_diff <- function(x, y, small) {
   
   if (!missing(small)) {
     if (isTRUE(small)) small <- 1000
-    stopifnot(is.numeric(small))
-    testthat::expect_less_than(object.size(environment(patch)), small)
+
+    if (identical(small, FALSE)) {
+      testthat::expect_more_than(object.size(environment(patch)), small)
+    } else {
+      stopifnot(is.numeric(small))
+      testthat::expect_less_than(object.size(environment(patch)), small)
+    }
   }
 }
 

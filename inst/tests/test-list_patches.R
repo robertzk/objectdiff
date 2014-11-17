@@ -20,3 +20,4 @@ test_that('it can patch a huge list with only a tiny change', {
   expect_diff(x, y, small = TRUE)
 })
 
+
