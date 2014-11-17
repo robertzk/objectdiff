@@ -13,6 +13,13 @@
 #' @examples
 #' \dontrun{
 #'   e <- tracked_environment()
+#'   e$x <- 1
+#'   commit(e)
+#'   e$x <- 2
+#'   commit(e)
+#'   stopifnot(identical(e$x, 2))
+#'   e$rollback(1)
+#'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
 tracked_environment <- function(env) {
   structure(list(env = env), class = 'tracked_environment')
