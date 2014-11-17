@@ -41,6 +41,7 @@ setMethod('objectdiff', signature = c('list', 'list'),
     if (mean(differ) > 0.5 && !wide) # If most differ in long list, just replace outright.
       return(trivial_patch(new_object))
 
+    # For wide lists, it may always be beneficial to use a differences patch.
     differences_patch(old_object, new_object, differ)
   })
 
