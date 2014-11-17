@@ -11,13 +11,6 @@ test_that('it can procure the underlying environment', {
   expect_identical(as.environment(tracked_environment(x)), x)
 })
 
-test_that('it cannot replace the underlying environment', {
-  x <- new.env()
-  y <- new.env()
-  tx <- tracked_environment(x)
-  expect_error(environment(tx) <- y, 'Cannot replace')
-})
-
 test_that('it can assign to the underlying environment', {
   x <- new.env()
   tx <- tracked_environment(x)

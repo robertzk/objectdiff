@@ -27,12 +27,8 @@ tracked_environment <- function(env) {
 
 as.environment.tracked_environment <- function(env) { env$env }
 environment <- function(...) UseMethod('environment')
-`environment<-` <- function(...) UseMethod('environment<-')
+environment.function <- function(...) base::environment(...)
 environment.tracked_environment <- as.environment.tracked_environment 
-`environment<-.tracked_environment` <- function(tracked_env, value) {
-  stop("Cannot replace tracked_environments. Use ",
-       "tracked_environment$env <- ", deparse(substitute(value)))
-}
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 `$<-.tracked_environment` <- function(env, name, value) {
