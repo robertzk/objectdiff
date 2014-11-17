@@ -15,6 +15,7 @@ test_that('it can diff an lm object', {
   expect_diff(lmo, lmo2)
 })
 
+# Test diffing of GBM objects
 local({
   some_gbm_data <- function(N = 1000) {
     # Drawn from the documentation for ?gbm
