@@ -44,6 +44,7 @@ print(microbenchmark(
 # We need some ways to check for that.
 
 unat <- function(y) { attributes(y) <- NULL; y }
+# TODO: (RK) Crap, what was x?
 #microbenchmark(all.equal(x,y), identical(x, y), identical(head(x,-1), head(y,-1)),
 #               identical(unat(x), unat(y)))
 
@@ -63,8 +64,8 @@ unat <- function(y) { attributes(y) <- NULL; y }
 
 smp <- sample(seq_len(1000000), 100)
 
-microbenchmark(all.equal(unclass(x), unclass(y), check.attributes = FALSE),
-               for(i in smp) identical(.subset2(x, i), .subset2(y, i)))
+#microbenchmark(all.equal(unclass(x), unclass(y), check.attributes = FALSE),
+#               for(i in smp) identical(.subset2(x, i), .subset2(y, i)))
 
 # Unit: microseconds
 #                                                        expr       min        lq     median uq         max        neval
