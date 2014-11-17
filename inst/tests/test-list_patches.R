@@ -35,3 +35,10 @@ test_that('it can patch a list name change', {
   expect_diff(x, y, small = 2000)
 })
 
+test_that('it can patch an attribute change', {
+  x <- as.list(1:10)
+  y <- x
+  attr(y, 'blue') <- iris
+  expect_diff(x, y)
+})
+
