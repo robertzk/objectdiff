@@ -20,8 +20,14 @@ benchmarks <- function(path, filter = '') {
 }
 
 # A test helper for comparing patched to actual.
-expect_diff <- function(x, y) {
-  testthat::expect_identical(objectdiff(x, y)(x), y)
+expect_diff <- function(x, y, small) {
+  testthat::expect_identical(patch <- objectdiff(x, y)(x), y)
+  
+  if (!missing(small)) {
+    if (isTRUE(small)) small <- 1000
+    stopifnot(is.numeric(small))
+    testthat::expect_less_than(object.size(environment(patch)), small)
+  }
 }
 
 
