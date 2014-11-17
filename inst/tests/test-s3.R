@@ -41,7 +41,8 @@ local({
 
   run_gbm <- function(data) {
     # Drawn from the documentation for ?gbm
-    gbm::gbm(Y ~ X1 + X2 + X3 + X4 + X5 + X6,
+    require(gbm)
+    gbm(Y ~ X1 + X2 + X3 + X4 + X5 + X6,
       data = data,                 # dataset
       var.monotone = rep(0, 6),    # -1: monotone decrease,
                                    # +1: monotone increase,
