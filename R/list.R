@@ -5,9 +5,10 @@
 setMethod('objectdiff', signature = c('list', 'list'),
   definition = function(old_object, new_object) {
     if (identical(old_object, new_object)) return(identity_patch())
-    if (length(old_object) != length(new_object)) {
+    if (length(old_object) != length(new_object) ||
+        !identical(names(old_object), names(new_object))) {
       # TODO: (RK) Come up with better heuristics for this scenario,
-      # like insertion and deletion detection.
+      # like insertion and deletion detection, or name changes.
       return(trivial_patch(new_object))
     }
 
