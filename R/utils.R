@@ -19,4 +19,9 @@ benchmarks <- function(path, filter = '') {
   invisible(lapply(benchmarks, source))
 }
 
+# A test helper for comparing patched to actual.
+expect_diff <- function(x, y) {
+  testthat::expect_identical(objectdiff(x, y)(x), y)
+}
+
 
