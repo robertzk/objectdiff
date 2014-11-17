@@ -26,3 +26,12 @@ test_that('it can patch a huge list with a huge change', {
 
   expect_diff(x, y, small = FALSE)
 })
+
+test_that('it can patch a list name change', {
+  x <- as.list(1:10)
+  names(x) <- letters[1:10]
+  y <- x
+  names(y)[10] <- 'boo'
+  expect_diff(x, y, small = 2000)
+})
+
