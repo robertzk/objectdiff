@@ -17,6 +17,7 @@ Imports:
     methods
 Suggests:
     testthat,
+    gbm,
     microbenchmark
 License: MIT
 LazyData: true
