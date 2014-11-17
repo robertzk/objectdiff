@@ -7,8 +7,22 @@
 #' To create a tracked environment from any environment \code{e}, simply write
 #' \code{tracked_environment(e)}.
 #' 
+#' @param env environment. When converted to a \code{tracked_environment},
+#'   all changes will be remembered whenever a "commit" is registered
+#'   on the environment. Commits can be named and labeled.
+#' @examples
+#' \dontrun{
+#'   e <- tracked_environment()
+#' }
 tracked_environment <- function(env) {
+  structure(list(env = env), class = 'tracked_environment')
+}
 
+as.environment.tracked_environment <- function(env) { env$env }
+environment <- function(...) UseMethod('environment')
+environment.tracked_environment <- as.environment.tracked_environment 
+`environment.tracked_environment<-` <- function(tracked_env, env) {
+  tracked_env$env <- env
 }
 
 `$<-.tracked_environment` <- function(env, name, value) {
@@ -24,9 +38,5 @@ tracked_environment <- function(env) {
   `[[<-`(env$env, name, value)
   env
 }
-
-
-
-
 
 
