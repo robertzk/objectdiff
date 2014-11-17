@@ -40,7 +40,7 @@ setMethod('objectdiff', signature = c('list', 'list'),
     if (mean(differ) > 0.5 && !wide) # If most differ in long list, just replace outright.
       return(trivial_patch(new_object))
 
-    trivial_patch(new_object)
+    differences_patch(old_object, new_object, differ)
   })
 
 #' Estimate the size of a list stochastically.
