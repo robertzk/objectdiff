@@ -35,6 +35,14 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 commit <- function(...) UseMethod('commit')
 rollback <- function(...) UseMethod('rollback')
 
+#' Commit a change to a tracked environment.
+#'
+#' Committing a change is equivalent to storing a patch object (see
+#' \code{\link{objectdiff}})
+#'
+#' @seealso \code{\link{objectdiff}})
+#' @param env tracked_environment.
+#' @param value character. Commit message. May be \code{NULL}.
 commit.tracked_environment <- function(env, value) {
 
 
