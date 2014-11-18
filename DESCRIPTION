@@ -17,6 +17,7 @@ Imports:
     methods
 Suggests:
     testthat,
+    testthatsomemore,
     gbm,
     microbenchmark
 License: MIT

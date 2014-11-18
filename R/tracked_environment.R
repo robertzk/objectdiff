@@ -22,6 +22,7 @@
 #'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
 tracked_environment <- function(env) {
+  force(env)
   structure(list(env = env), class = 'tracked_environment')
 }
 
