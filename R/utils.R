@@ -5,6 +5,10 @@ bare <- function(x) {
   unclass(unname(x))
 }
 
+clear_environment <- function(env) {
+  rm(ls(env, all = TRUE), envir = env)
+}
+
 benchmarks <- function(path, filter = '') {
   find_benchmarks <- function(path) {
     files <- list.files(pattern = '^benchmark', path, full.names = TRUE)

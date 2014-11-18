@@ -69,7 +69,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param value character. Commit message. May be \code{NULL}.
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
-  env%$%commits$push(squish_patches(env$staged$pop_all()))
+  out <- env%$%commits$push(squish_patches(env$staged$pop_all()))
+  clear_environment(env%$%ghost)
+  out
 }
 
 #' Roll back commits to an earlier version of the tracked environment.
@@ -111,14 +113,20 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 `$<-.tracked_environment` <- function(env, name, value) {
   tmp <- class(env)
-  assign_call <- quote(`$<-`(env%$%env, name, value))
+  assign_call <- quote(`[[<-`(env, name, value))
   assign_call[[3]] <- as.name(substitute(name))
   eval(assign_call)
   env
 }
 
 `[[<-.tracked_environment` <- function(env, name, value) {
-  tmp <- class(env)
+  # Record the before-value in the ghost environment.
+  # TODO: (RK) What about environments...? Those won't work correctly.
+  env%$%ghost[[name]] <-
+    if (exists(name, envir = env%$%env, inherits = FALSE))
+      env%$%env[[name]]
+    else NULL
+
   `[[<-`(env%$%env, name, value)
   env
 }
