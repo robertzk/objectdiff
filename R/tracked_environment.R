@@ -32,6 +32,14 @@ environment.function <- function(...) base::environment(...)
 environment.tracked_environment <- as.environment.tracked_environment 
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
+commit <- function(...) UseMethod('commit')
+rollback <- function(...) UseMethod('rollback')
+
+commit.tracked_environment <- function(env, value) {
+
+
+}
+
 `$<-.tracked_environment` <- function(env, name, value) {
   tmp <- class(env)
   assign_call <- quote(`$<-`(env$env, name, value))
@@ -48,9 +56,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 assign <- function(x, value, envir, ...) {
   if (!missing(envir)) {
-    if (is.tracked_environment(envir)) base::assign(x, value, envir$env, ...)
-    else base::assign(x, value, envir, ...)
+    if (is.tracked_environment(envir)) {
+      envir$env[[x]] <- value
+    } else base::assign(x, value, envir, ...)
   } else base::assign(x, value, ...)
 }
-
 
