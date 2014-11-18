@@ -10,6 +10,7 @@
 #' @param env environment. When converted to a \code{tracked_environment},
 #'   all changes will be remembered whenever a "commit" is registered
 #'   on the environment. Commits can be named and labeled.
+#' @rdname tracked_environment
 #' @examples
 #' \dontrun{
 #'   e <- tracked_environment()
@@ -67,8 +68,28 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   #squish_patches(
 }
 
-`%$%` <- function(tracked_env, name) {
-  base::get(deparse(substitute(name)), envir = tracked_env, inherits = FALSE)
+#' @param name character. When using the \code{\%$\%} infix operator,
+#'    access a meta-datum from the \code{tracked_environment} (for example,
+#'    "env", "staged", or "commits").
+#' @note
+#' A tracked_environment is itself an environment that contains
+#' \itemize{
+#'   \item{\code{env}. }{The environment that is getting tracked.}
+#'   \item{\code{staged}. }{A list of staged changes (\code{patch} objects, that is,
+#'     functions that record what has changed in an atomic modification
+#'     operation on the \code{env}.}
+#'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
+#'     that represent the history of the \code{tracked_environment}}.
+#' }
+#' 
+#' From within the objectdiff package, it is possible to access these
+#' explicitly using the \code{\%$\%} operator, for example, 
+#' \code{some_tracked_env\%$\%commits}.
+#'
+#' @export
+#' @rdname tracked_environment
+`%$%` <- function(env, name) {
+  base::get(deparse(substitute(name)), envir = env, inherits = FALSE)
 }
 
 `$.tracked_environment` <- function(env, ...) {
