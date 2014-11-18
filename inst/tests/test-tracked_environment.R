@@ -11,6 +11,10 @@ test_that('it can procure the underlying environment', {
   expect_identical(as.environment(tracked_environment(x)), x)
 })
 
+test_that("it doesn't allow recursively tracked environments", {
+  expect_error(tracked_environment(tracked_environment(new.env())), "Recursion")
+})
+
 test_that('it can assign to the underlying environment', {
   x <- new.env()
   tx <- tracked_environment(x)

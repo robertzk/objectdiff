@@ -23,10 +23,20 @@
 #' }
 tracked_environment <- function(env) {
   force(env)
-  structure(list(env = env), class = 'tracked_environment')
+  stopifnot(is.environment(env))
+  if (is.tracked_environment(env))
+    stop("Recursion! Can't track an already-tracked environment.")
+
+  structure(class = 'tracked_environment', list2env(parent = emptyenv(),
+    list(env = env, staged = make_stack(), commits = make_stack())
+  ))
 }
 
+
+as.environment <- function(...) UseMethod('as.environment')
 as.environment.tracked_environment <- function(env) { env$env }
+as.environment.character <- function(...) base::as.environment(...)
+
 environment <- function(...) UseMethod('environment')
 environment.function <- function(...) base::environment(...)
 environment.tracked_environment <- as.environment.tracked_environment 
@@ -50,8 +60,7 @@ rollback <- function(...) UseMethod('rollback')
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
 commit.tracked_environment <- function(env, value) {
-
-
+  
 }
 
 `$<-.tracked_environment` <- function(env, name, value) {
