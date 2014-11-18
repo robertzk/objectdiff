@@ -42,7 +42,8 @@ ls.environment <- function(...) base::ls(...)
 
 as.environment <- function(...) UseMethod('as.environment')
 as.environment.tracked_environment <- function(env) { env%$%env }
-as.environment.character <- function(...) base::as.environment(...)
+as.environment.character <- as.environment.list <-
+ function(...) base::as.environment(...)
 
 environment <- function(...) UseMethod('environment')
 environment.function <- function(...) base::environment(...)
@@ -66,8 +67,18 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @seealso \code{\link{objectdiff}})
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
+#' @export
 `commit<-.tracked_environment` <- function(env, value) {
   env%$%commits$push(squish_patches(env$staged$pop_all()))
+}
+
+#' Roll back commits to an earlier version of the tracked environment.
+#'
+#' @param env tracked_environment.
+#' @param value integer. Number of commits to roll back.
+#' @export
+`rollback<-.tracked_environment` <- function(env, value) {
+  .NotYetImplemented()
 }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
