@@ -12,7 +12,13 @@
 }
 \description{
 Committing a change is equivalent to storing a patch object (see
-\code{\link{objectdiff}})
+\code{\link{objectdiff}}). For the moment, any comment will produce
+a single patch by "squishing" any changes made to the environment.
+If you are iterating over an environment object many many times,
+you should probably batch changes if it lives in a tracked environment.
+Otherwise, for example, making 1,000,000 small modifications to
+a data.frame before commiting could cause a long time to recompute
+the "final patch".
 }
 \seealso{
 \code{\link{objectdiff}})
