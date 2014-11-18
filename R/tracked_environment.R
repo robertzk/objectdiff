@@ -45,8 +45,8 @@ environment.function <- function(...) base::environment(...)
 environment.tracked_environment <- as.environment.tracked_environment 
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
-commit <- function(...) UseMethod('commit')
-rollback <- function(...) UseMethod('rollback')
+`commit<-` <- function(...) UseMethod('commit<-')
+`rollback<-` <- function(...) UseMethod('rollback<-')
 
 #' Commit a change to a tracked environment.
 #'
@@ -62,8 +62,8 @@ rollback <- function(...) UseMethod('rollback')
 #' @seealso \code{\link{objectdiff}})
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
-commit.tracked_environment <- function(env, value) {
-  
+`commit<-.tracked_environment` <- function(env, value) {
+
 }
 
 `$<-.tracked_environment` <- function(env, name, value) {
