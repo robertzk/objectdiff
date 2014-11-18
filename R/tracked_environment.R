@@ -32,6 +32,9 @@ tracked_environment <- function(env) {
   ))
 }
 
+ls <- function(...) UseMethod('ls')
+ls.tracked_environment <- function(x, ...) base::ls(x$env, ...)
+ls.environment <- function(...) base::ls(...)
 
 as.environment <- function(...) UseMethod('as.environment')
 as.environment.tracked_environment <- function(env) { env$env }
