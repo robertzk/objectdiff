@@ -22,3 +22,10 @@ test_that('it can assign to the underlying environment', {
   expect_identical(x$x, 1)
 })
 
+test_that('it can use ls on tracked_environments', {
+  x <- tracked_environment(new.env())
+  x$x <- 1
+  x$y <- 2
+  expect_equal(ls(x), c('x', 'y'))
+})
+

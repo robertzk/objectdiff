@@ -29,16 +29,19 @@ tracked_environment <- function(env) {
     stop("Recursion! Can't track an already-tracked environment.")
 
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
-    list(env = env, staged = make_stack(), commits = make_stack())
+    list(env = env,
+         ghost = new.env(parent = emptyenv()),
+         staged = make_stack(),
+         commits = make_stack())
   ))
 }
 
 ls <- function(...) UseMethod('ls')
-ls.tracked_environment <- function(x, ...) base::ls(x$env, ...)
+ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
 ls.environment <- function(...) base::ls(...)
 
 as.environment <- function(...) UseMethod('as.environment')
-as.environment.tracked_environment <- function(env) { env$env }
+as.environment.tracked_environment <- function(env) { env%$%env }
 as.environment.character <- function(...) base::as.environment(...)
 
 environment <- function(...) UseMethod('environment')
@@ -92,7 +95,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 `$.tracked_environment` <- function(env, ...) {
-  base::get(..., envir = z%$%env)
+  base::get(..., envir = env%$%env)
 }
 
 `$<-.tracked_environment` <- function(env, name, value) {
@@ -112,7 +115,8 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 assign <- function(x, value, envir, ...) {
   if (!missing(envir)) {
     if (is.tracked_environment(envir)) {
-      (envir%$%env)[[x]] <- value
+      e <- envir%$%env
+      e[[x]] <- value
     } else base::assign(x, value, envir, ...)
   } else base::assign(x, value, ...)
 }
