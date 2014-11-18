@@ -63,12 +63,21 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
 `commit<-.tracked_environment` <- function(env, value) {
+  #env$staged$pop_all()
+  #squish_patches(
+}
 
+`%$%` <- function(tracked_env, name) {
+  base::get(deparse(substitute(name)), envir = tracked_env, inherits = FALSE)
+}
+
+`$.tracked_environment` <- function(env, ...) {
+  base::get(..., envir = z%$%env)
 }
 
 `$<-.tracked_environment` <- function(env, name, value) {
   tmp <- class(env)
-  assign_call <- quote(`$<-`(env$env, name, value))
+  assign_call <- quote(`$<-`(env%$%env, name, value))
   assign_call[[3]] <- as.name(substitute(name))
   eval(assign_call)
   env
@@ -76,14 +85,14 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 `[[<-.tracked_environment` <- function(env, name, value) {
   tmp <- class(env)
-  `[[<-`(env$env, name, value)
+  `[[<-`(env%$%env, name, value)
   env
 }
 
 assign <- function(x, value, envir, ...) {
   if (!missing(envir)) {
     if (is.tracked_environment(envir)) {
-      envir$env[[x]] <- value
+      (envir%$%env)[[x]] <- value
     } else base::assign(x, value, envir, ...)
   } else base::assign(x, value, ...)
 }
