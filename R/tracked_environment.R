@@ -14,11 +14,11 @@
 #' \dontrun{
 #'   e <- tracked_environment()
 #'   e$x <- 1
-#'   commit(e)
+#'   commit(e) <- 'First message'
 #'   e$x <- 2
-#'   commit(e)
+#'   commit(e) <- 'Second message'
 #'   stopifnot(identical(e$x, 2))
-#'   e$rollback(1)
+#'   rollback(e) <- 1
 #'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
 tracked_environment <- function(env) {
