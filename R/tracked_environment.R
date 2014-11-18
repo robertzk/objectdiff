@@ -64,8 +64,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
 `commit<-.tracked_environment` <- function(env, value) {
-  #env$staged$pop_all()
-  #squish_patches(
+  env%$%commits$push(squish_patches(env$staged$pop_all()))
 }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
