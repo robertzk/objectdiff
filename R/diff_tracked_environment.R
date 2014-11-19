@@ -7,7 +7,7 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
     if (!identical(old_object, new_object))
       stop("tracked_environments can only be diffed against themselves")
 
-
+    setdiff(new_object%$%universe, ls(new_object, all = TRUE))
 
     
   })

@@ -41,18 +41,17 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
 setClass('tracked_environment')
 
 #' @export
-ls <- function(...) UseMethod('ls')
+ls <- function(name, ...) UseMethod('ls')
 #' @export
-ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
+ls.tracked_environment <- function(name, ...) base::ls(environment(name), ...)
 #' @export
-ls.environment <- function(...) base::ls(...)
+ls.environment <- function(name, ...) base::ls(name, ...)
 
 #' @export
-rm <- function(...) UseMethod('rm')
-#' @export
-rm.tracked_environment <- function(x, ...) base::rm(x%$%env, ...)
-#' @export
-rm.environment <- function(...) base::rm(...)
+rm <- function(..., envir) {
+  base::rm(..., envir =
+    if (is.tracked_environment(envir)) environment(envir) else envir)
+}
 
 #' @export
 as.environment <- function(...) UseMethod('as.environment')
@@ -99,7 +98,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
   # TODO: (RK) Do something with the commit message..?
-  out <- env%$%commits$push(squish_patches(env%$%ghost, env$staged$pop_all()))
+  (env%$%commits)$push(objectdiff(env, env))
   env%$%universe <- ls(env%$%env, all = TRUE)
   clear_environment(env%$%ghost)
   out

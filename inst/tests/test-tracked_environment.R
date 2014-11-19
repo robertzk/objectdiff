@@ -29,6 +29,14 @@ test_that('it can use ls on tracked_environments', {
   expect_equal(ls(x), c('x', 'y'))
 })
 
+test_that('it can use rm on tracked_environments', {
+  x <- tracked_environment(new.env())
+  x$x <- 1
+  x$y <- 2
+  rm('y', envir = x)
+  expect_equal(ls(x), 'x')
+})
+
 test_that('the %$% infix operator works', {
   x <- tracked_environment(y <- new.env())
   expect_identical(x%$%env, y)
