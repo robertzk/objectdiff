@@ -32,7 +32,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
     list(env = env,
          ghost = new.env(parent = emptyenv()),
-         deletions = character(0),
+         universe = ls(env, all = TRUE),
          staged = make_stack(),
          commits = make_stack())
   ))
@@ -44,14 +44,7 @@ ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
 ls.environment <- function(...) base::ls(...)
 
 rm <- function(...) UseMethod('rm')
-rm.tracked_environment <- function(x, ...) {
-  before <- ls(x%$%env, all = TRUE)
-  base::rm(x%$%env, ...)
-  after  <- ls(x%$%env, all = TRUE)
-  x%$%deletions <- 
-
-  invisible(NULL)
-}
+rm.tracked_environment <- function(x, ...) base::rm(x%$%env, ...)
 rm.environment <- function(...) base::rm(...)
 
 as.environment <- function(...) UseMethod('as.environment')
@@ -84,6 +77,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
   out <- env%$%commits$push(squish_patches(env%$%ghost, env$staged$pop_all()))
+  env%$%universe <- character(0)
   clear_environment(env%$%ghost)
   out
 }
@@ -147,6 +141,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
     g[[name]] <-
       if (exists(name, envir = e, inherits = FALSE)) e[[name]]
       else NULL
+
+  if (!exists(name, envir = e, inherits = FALSE))
+    env%$%universe <- c(env%$%universe, name)
 
   `[[<-`(e, name, value)
   env

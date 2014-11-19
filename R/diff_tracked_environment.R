@@ -6,6 +6,10 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
   definition = function(old_object, new_object) {
     if (!identical(old_object, new_object))
       stop("tracked_environments can only be diffed against themselves")
+
+
+
+    
   })
 
  
