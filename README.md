@@ -24,7 +24,7 @@ get memory-prohibitive very quickly, we only need to store iris and its patch
 
 If we applied ten different manipulations to a dataset, we could keep a history of our changes
 by storing the successive patches in conjunction with the initial data set. In essence,
-objectdiff aims to be a "Git for R data".
+objectdiff aims to be a "Git for R data."
 
 Tracked environments
 ------------
