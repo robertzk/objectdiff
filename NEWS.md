@@ -1,8 +1,8 @@
 # Version 0.2.0
 
 * Introduced a `tracked_environment` object. This is like an `environment`,
-  but it supports [commits](R/tracked_environment.R#L56) in-memory,
-  allowing you to [rollback](R/tracked_environment.R#L77) your changes to
+  but it supports [commits](R/tracked_environment.R#L78) in-memory,
+  allowing you to [rollback](R/tracked_environment.R#L107) your changes to
   a previous state (or peek back in history by re-running a chain of patches).
   For more details, see the [vignette on `tracked_environment`s](vignettes/tracked_environment.Rmd)
 
