@@ -21,6 +21,12 @@ Otherwise, for example, making 1,000,000 small modifications to
 a data.frame before commiting could cause a long time to recompute
 the "final patch".
 }
+\examples{
+x <- tracked_environment()
+x$foo <- 1
+commit(x) <- 'First message'
+x$foo <- 2
+}
 \seealso{
 \code{\link{objectdiff}})
 }

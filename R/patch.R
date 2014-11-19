@@ -11,6 +11,12 @@ as.patch <- function(x) {
   x
 }
 
+#' Check if an R object is a patch.
+#'
+#' @param x ANY. Some R object.
+#' @export
+is.patch <- function(x) { is(x, 'patch') }
+
 #' @rdname patch
 identity_patch <- function() {
   patch <- function(...) ..1

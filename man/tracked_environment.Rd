@@ -5,18 +5,19 @@
 \alias{tracked_environment}
 \title{An environment object that tracks changes made to its constituents.}
 \usage{
-tracked_environment(env)
+tracked_environment(env = new.env(parent = emptyenv()))
 
 env \%$\% name
 }
 \arguments{
 \item{env}{environment. When converted to a \code{tracked_environment},
 all changes will be remembered whenever a "commit" is registered
-on the environment. Commits can be named and labeled.}
+on the environment. Commits can be named and labeled. The default is
+\code{new.env(parent = emptyenv())} (a new environment with no parent).}
 
 \item{name}{character. When using the \code{\%$\%} infix operator,
 access a meta-datum from the \code{tracked_environment} (for example,
-"env", "staged", or "commits").}
+"env", "ghost", "universe", or "commits").}
 }
 \description{
 A typical R environment is like a mathematical set. It is a bag of
@@ -31,9 +32,13 @@ To create a tracked environment from any environment \code{e}, simply write
 A tracked_environment is itself an environment that contains
 \itemize{
   \item{\code{env}. }{The environment that is getting tracked.}
-  \item{\code{staged}. }{A list of staged changes (\code{patch} objects, that is,
-    functions that record what has changed in an atomic modification
-    operation on the \code{env}.}
+  \item{\code{ghost}. }{An environment that holds the "before" version
+    of objects prior to committing a change. When a
+    \code{tracked_environment} receives a commit, it will clear
+    its ghost environment.}
+  \item{\code{universe}. }{Essentially just running \code{base::ls} (i.e.,
+    fetching the names of all objects in) the \code{env} before any
+    changes occur. This is re-computed after a commit.}
   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
     that represent the history of the \code{tracked_environment}}.
 }

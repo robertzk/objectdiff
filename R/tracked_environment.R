@@ -9,8 +9,10 @@
 #' 
 #' @param env environment. When converted to a \code{tracked_environment},
 #'   all changes will be remembered whenever a "commit" is registered
-#'   on the environment. Commits can be named and labeled.
+#'   on the environment. Commits can be named and labeled. The default is
+#'   \code{new.env(parent = emptyenv())} (a new environment with no parent).
 #' @rdname tracked_environment
+#' @export
 #' @examples
 #' \dontrun{
 #'   e <- tracked_environment()
@@ -22,7 +24,7 @@
 #'   rollback(e) <- 1
 #'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
-tracked_environment <- function(env) {
+tracked_environment <- function(env = new.env(parent = emptyenv())) {
   force(env)
   stopifnot(is.environment(env))
   if (is.tracked_environment(env))
@@ -31,26 +33,46 @@ tracked_environment <- function(env) {
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
     list(env = env,
          ghost = new.env(parent = emptyenv()),
-         staged = make_stack(),
+         universe = ls(env, all = TRUE),
          commits = make_stack())
   ))
 }
+#' @export
+setClass('tracked_environment')
 
-ls <- function(...) UseMethod('ls')
-ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
-ls.environment <- function(...) base::ls(...)
+#' @export
+ls <- function(name, ...) UseMethod('ls')
+#' @export
+ls.tracked_environment <- function(name, ...) base::ls(environment(name), ...)
+#' @export
+ls.environment <- function(name, ...) base::ls(name, ...)
 
+#' @export
+rm <- function(..., envir) {
+  base::rm(..., envir =
+    if (is.tracked_environment(envir)) environment(envir) else envir)
+}
+
+#' @export
 as.environment <- function(...) UseMethod('as.environment')
+#' @export
 as.environment.tracked_environment <- function(env) { env%$%env }
+#' @export
 as.environment.character <- as.environment.list <-
  function(...) base::as.environment(...)
 
+#' @export
 environment <- function(...) UseMethod('environment')
+#' @export
 environment.function <- function(...) base::environment(...)
+#' @export
 environment.tracked_environment <- as.environment.tracked_environment 
+#' @export
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
+#' @export
 `commit<-` <- function(...) UseMethod('commit<-')
+#' @export
 `rollback<-` <- function(...) UseMethod('rollback<-')
 
 #' Commit a change to a tracked environment.
@@ -67,11 +89,19 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @seealso \code{\link{objectdiff}})
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
+#' @rdname commit
+#' @examples
+#' x <- tracked_environment()
+#' x$foo <- 1
+#' commit(x) <- 'First message'
+#' x$foo <- 2
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
-  out <- env%$%commits$push(squish_patches(env$staged$pop_all()))
+  # TODO: (RK) Do something with the commit message..?
+  (env%$%commits)$push(objectdiff(env, env))
+  env%$%universe <- ls(env%$%env, all = TRUE)
   clear_environment(env%$%ghost)
-  out
+  env
 }
 
 #' Roll back commits to an earlier version of the tracked environment.
@@ -85,14 +115,18 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
-#'    "env", "staged", or "commits").
+#'    "env", "ghost", "universe", or "commits").
 #' @note
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
 #'   \item{\code{env}. }{The environment that is getting tracked.}
-#'   \item{\code{staged}. }{A list of staged changes (\code{patch} objects, that is,
-#'     functions that record what has changed in an atomic modification
-#'     operation on the \code{env}.}
+#'   \item{\code{ghost}. }{An environment that holds the "before" version
+#'     of objects prior to committing a change. When a
+#'     \code{tracked_environment} receives a commit, it will clear
+#'     its ghost environment.}
+#'   \item{\code{universe}. }{Essentially just running \code{base::ls} (i.e.,
+#'     fetching the names of all objects in) the \code{env} before any
+#'     changes occur. This is re-computed after a commit.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment}}.
 #' }
@@ -107,10 +141,26 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   base::get(deparse(substitute(name)), envir = env, inherits = FALSE)
 }
 
-`$.tracked_environment` <- function(env, ...) {
-  base::get(..., envir = env%$%env)
+#' @export
+`%$%<-` <- function(env, name, value) {
+  stopifnot(is.tracked_environment(env))
+
+  base::assign(deparse(substitute(name)), value, envir = env, inherits = FALSE)
+  env
 }
 
+#' @export
+`[[.tracked_environment` <- function(env, name) {
+  if (exists(name, envir = environment(env), inherits = FALSE))
+    base::get(name, envir = environment(env))
+  else NULL
+}
+
+#' @export
+`$.tracked_environment` <- `[[.tracked_environment`
+# TODO: (RK) Overwrite base::get
+
+#' @export
 `$<-.tracked_environment` <- function(env, name, value) {
   assign_call <- quote(`[[<-`(env, name, value))
   assign_call[[3]] <- substitute(name)
@@ -118,18 +168,21 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   env
 }
 
+#' @export
 `[[<-.tracked_environment` <- function(env, name, value) {
   # Record the before-value in the ghost environment.
   # TODO: (RK) What about environments...? Those won't work correctly.
   e <- env%$%env; g <- env%$%ghost
-  g[[name]] <-
-    if (exists(name, envir = e, inherits = FALSE)) e[[name]]
-    else NULL
+  if (!exists(name, envir = g, inherits = FALSE))
+    g[[name]] <-
+      if (exists(name, envir = e, inherits = FALSE)) e[[name]]
+      else NULL
 
   `[[<-`(e, name, value)
   env
 }
 
+#' @export
 assign <- function(x, value, envir, ...) {
   if (!missing(envir)) {
     if (is.tracked_environment(envir)) {
