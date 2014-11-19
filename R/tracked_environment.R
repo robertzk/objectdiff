@@ -133,8 +133,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 assign <- function(x, value, envir, ...) {
   if (!missing(envir)) {
     if (is.tracked_environment(envir)) {
-      e <- envir%$%env
-      e[[x]] <- value
+      envir[[x]] <- value
     } else base::assign(x, value, envir, ...)
   } else base::assign(x, value, ...)
 }

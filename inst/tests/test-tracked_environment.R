@@ -33,3 +33,22 @@ test_that('the %$% infix operator works', {
   x <- tracked_environment(y <- new.env())
   expect_identical(x%$%env, y)
 })
+
+test_that('$<- assignment ghosts', {
+  x <- tracked_environment(new.env())
+  x$x <- 1
+  expect_null((x%$%ghost)$x, NULL)
+})
+
+test_that('[[<- assignment ghosts', {
+  x <- tracked_environment(new.env())
+  x[['x']] <- 1
+  expect_null((x%$%ghost)$x, NULL)
+})
+
+test_that('assign assignment ghosts', {
+  x <- tracked_environment(new.env())
+  assign('x', 1, envir = x)
+  expect_null((x%$%ghost)$x, NULL)
+})
+
