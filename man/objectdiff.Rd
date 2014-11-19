@@ -22,7 +22,7 @@ an environment.}
 }
 \value{
 a function that can transform \code{old_object} into \code{new_object},
-  but tries to keep memory foot print minimal. For example, if both are two
+  but tries to keep memory footprint minimal. For example, if both are two
   data.frame's of 100,000s of rows and 1,000s of columns, but the only change
   made was the dropping of one column, the patching function will record
   only that information and not a full copy of both datasets.
