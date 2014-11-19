@@ -37,6 +37,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
          commits = make_stack())
   ))
 }
+#' @export
 setClass('tracked_environment')
 
 #' @export
