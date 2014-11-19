@@ -37,6 +37,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
          commits = make_stack())
   ))
 }
+setClass('tracked_environment')
 
 ls <- function(...) UseMethod('ls')
 ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
@@ -123,9 +124,8 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 `%$%<-` <- function(env, name, value) {
   stopifnot(is.tracked_environment(env))
 
-  class(env) <- 'environment'
-  on.exit(class(env) <- 'tracked_environment')
-  # env$
+  base::assign(deparse(substitute(name)), value, envir = env, inherits = FALSE)
+  env
 }
 
 `$.tracked_environment` <- function(env, ...) {

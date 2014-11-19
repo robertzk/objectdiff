@@ -5,14 +5,15 @@
 \alias{tracked_environment}
 \title{An environment object that tracks changes made to its constituents.}
 \usage{
-tracked_environment(env)
+tracked_environment(env = new.env(parent = emptyenv()))
 
 env \%$\% name
 }
 \arguments{
 \item{env}{environment. When converted to a \code{tracked_environment},
 all changes will be remembered whenever a "commit" is registered
-on the environment. Commits can be named and labeled.}
+on the environment. Commits can be named and labeled. The default is
+\code{new.env(parent = emptyenv())} (a new environment with no parent).}
 
 \item{name}{character. When using the \code{\%$\%} infix operator,
 access a meta-datum from the \code{tracked_environment} (for example,

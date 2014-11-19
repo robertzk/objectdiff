@@ -3,6 +3,7 @@
 S3method("commit<-",tracked_environment)
 S3method("rollback<-",tracked_environment)
 export("%$%")
+export(is.patch)
 export(objectdiff)
 export(squish_patches)
 exportClasses(patch)
