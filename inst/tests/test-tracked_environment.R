@@ -22,6 +22,12 @@ test_that('it can assign to the underlying environment', {
   expect_identical(x$x, 1)
 })
 
+test_that('it does not break assignment to an environment', {
+  x <- new.env()
+  assign('x', 1, x)
+  expect_identical(x$x, 1)
+})
+
 test_that('it can use ls on tracked_environments', {
   x <- tracked_environment(new.env())
   x$x <- 1
@@ -29,8 +35,23 @@ test_that('it can use ls on tracked_environments', {
   expect_equal(ls(x), c('x', 'y'))
 })
 
+test_that('it can use ls on environments', {
+  x <- new.env()
+  x$x <- 1
+  x$y <- 2
+  expect_equal(ls(x), c('x', 'y'))
+})
+
 test_that('it can use rm on tracked_environments', {
   x <- tracked_environment(new.env())
+  x$x <- 1
+  x$y <- 2
+  rm('y', envir = x)
+  expect_equal(ls(x), 'x')
+})
+
+test_that('it can still use rm on environments', {
+  x <- new.env()
   x$x <- 1
   x$y <- 2
   rm('y', envir = x)
