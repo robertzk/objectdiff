@@ -5,6 +5,10 @@ bare <- function(x) {
   unclass(unname(x))
 }
 
+clear_environment <- function(env) {
+  rm(ls(env, all = TRUE), envir = env)
+}
+
 benchmarks <- function(path, filter = '') {
   find_benchmarks <- function(path) {
     files <- list.files(pattern = '^benchmark', path, full.names = TRUE)
@@ -35,4 +39,26 @@ expect_diff <- function(x, y, small) {
   }
 }
 
+# An S3 class that implements a stack data structure.
+make_stack <- function() {
+  elements <- list()
+  structure(class = 'stack', list(
+    clear      = function()  { elements <<- list() },
+    empty      = function()  { length(elements) == 0 },
+    push       = function(x) { elements[[length(elements) + 1]] <<- x },
+    peek       = function(n = 1)  {
+      if (isTRUE(n)) return(elements)
+      els <- seq(length(elements), length(elements) - n + 1)
+      if (length(els) == 1) elements[[els]]
+      else elements[els]
+    },
+    pop        = function()  {
+      if (length(elements) == 0) stop("objectdiff:::stack is empty")
+      tmp <- tail(elements, 1)[[1]]
+      elements[[length(elements)]] <<- NULL
+      tmp
+    },
+    pop_all    = function()  { tmp <- elements; elements <<- list(); tmp }
+  ))
+}                                                                      
 

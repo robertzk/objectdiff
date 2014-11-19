@@ -26,6 +26,29 @@ If we applied ten different manipulations to a dataset, we could keep a history 
 by storing the successive patches in conjunction with the initial data set. In essence,
 objectdiff aims to be a "Git for R data".
 
+Tracked environments
+------------
+
+Hand in hand with patching R objects is the idea of tracking all changes to
+an [environment](http://adv-r.had.co.nz/Environments.html). For this purpose,
+objectdiff provides a `tracked_environment` object. Consider the 
+following example.
+
+```r
+e <- tracked_environment(new.env())
+e$x <- 1
+commit(e) <- 'First commit' # Store changes -- NULL for no commit message
+e$x <- 2
+commit(e) <- 'Second commit'
+e$x <- 3
+commit(e) <- 'Third commit'
+print(e$x)
+# [1] 3
+rollback(e) <- 2 # Roll back two commits
+print(e$x)
+# [1] 1 # Back to the first commit! This environment remembers changes.
+```
+
 Installation
 ------------
 
