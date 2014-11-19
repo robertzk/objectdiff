@@ -49,12 +49,6 @@ ls.environment <- function(name, ...) base::ls(name, ...)
 
 #' @export
 rm <- function(..., envir) {
-  #call <- sys.call()
-  #browser()
-  # if (is.tracked_environment(envir))
-  #args <- substitute(alist(...))
-  #args$envir <- substitute(envir)
-  #do.call(
   base::rm(..., envir =
     if (is.tracked_environment(envir)) environment(envir) else envir)
 }
