@@ -69,7 +69,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param value character. Commit message. May be \code{NULL}.
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
-  out <- env%$%commits$push(squish_patches(env$staged$pop_all()))
+  out <- env%$%commits$push(squish_patches(env%$%ghost, env$staged$pop_all()))
   clear_environment(env%$%ghost)
   out
 }
