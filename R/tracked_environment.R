@@ -9,7 +9,8 @@
 #' 
 #' @param env environment. When converted to a \code{tracked_environment},
 #'   all changes will be remembered whenever a "commit" is registered
-#'   on the environment. Commits can be named and labeled.
+#'   on the environment. Commits can be named and labeled. The default is
+#'   \code{new.env(parent = emptyenv())} (a new environment with no parent).
 #' @rdname tracked_environment
 #' @examples
 #' \dontrun{
@@ -22,7 +23,7 @@
 #'   rollback(e) <- 1
 #'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
-tracked_environment <- function(env) {
+tracked_environment <- function(env = new.env(parent = emptyenv())) {
   force(env)
   stopifnot(is.environment(env))
   if (is.tracked_environment(env))
@@ -31,6 +32,7 @@ tracked_environment <- function(env) {
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
     list(env = env,
          ghost = new.env(parent = emptyenv()),
+         deletions = character(0),
          staged = make_stack(),
          commits = make_stack())
   ))
@@ -39,6 +41,17 @@ tracked_environment <- function(env) {
 ls <- function(...) UseMethod('ls')
 ls.tracked_environment <- function(x, ...) base::ls(x%$%env, ...)
 ls.environment <- function(...) base::ls(...)
+
+rm <- function(...) UseMethod('rm')
+rm.tracked_environment <- function(x, ...) {
+  before <- ls(x%$%env, all = TRUE)
+  base::rm(x%$%env, ...)
+  after  <- ls(x%$%env, all = TRUE)
+  x%$%deletions <- 
+
+  invisible(NULL)
+}
+rm.environment <- function(...) base::rm(...)
 
 as.environment <- function(...) UseMethod('as.environment')
 as.environment.tracked_environment <- function(env) { env%$%env }
@@ -105,6 +118,14 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @rdname tracked_environment
 `%$%` <- function(env, name) {
   base::get(deparse(substitute(name)), envir = env, inherits = FALSE)
+}
+
+`%$%<-` <- function(env, name, value) {
+  stopifnot(is.tracked_environment(env))
+
+  class(env) <- 'environment'
+  on.exit(class(env) <- 'tracked_environment')
+  # env$
 }
 
 `$.tracked_environment` <- function(env, ...) {
