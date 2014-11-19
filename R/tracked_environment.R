@@ -150,11 +150,15 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 #' @export
-`$.tracked_environment` <- function(env, name) {
+`[[.tracked_environment` <- function(env, name) {
   if (exists(name, envir = environment(env), inherits = FALSE))
     base::get(name, envir = environment(env))
   else NULL
 }
+
+#' @export
+`$.tracked_environment` <- `[[.tracked_environment`
+# TODO: (RK) Overwrite base::get
 
 #' @export
 `$<-.tracked_environment` <- function(env, name, value) {
@@ -173,9 +177,6 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
     g[[name]] <-
       if (exists(name, envir = e, inherits = FALSE)) e[[name]]
       else NULL
-
-  if (!exists(name, envir = e, inherits = FALSE))
-    env%$%universe <- c(env%$%universe, name)
 
   `[[<-`(e, name, value)
   env
