@@ -2,6 +2,7 @@
 
 S3method("$",tracked_environment)
 S3method("$<-",tracked_environment)
+S3method("[[",tracked_environment)
 S3method("[[<-",tracked_environment)
 S3method("commit<-",tracked_environment)
 S3method("rollback<-",tracked_environment)
