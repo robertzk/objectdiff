@@ -3,7 +3,7 @@
 \docType{methods}
 \name{objectdiff,tracked_environment,tracked_environment-method}
 \alias{objectdiff,tracked_environment,tracked_environment-method}
-\title{Record what changes have been made to the latest tracked environment.}
+\title{Record what changes have been made to a tracked environment.}
 \usage{
 \S4method{objectdiff}{tracked_environment,tracked_environment}(old_object,
   new_object)
@@ -15,6 +15,6 @@
 an environment.}
 }
 \description{
-Record what changes have been made to the latest tracked environment.
+Record what changes have been made to a tracked environment.
 }
 

@@ -1,4 +1,4 @@
-#' Record what changes have been made to the latest tracked environment.
+#' Record what changes have been made to a tracked environment.
 #'
 #' @inheritParams objectdiff
 #' @include objectdiff.R tracked_environment.R
