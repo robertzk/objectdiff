@@ -122,9 +122,10 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   # Record the before-value in the ghost environment.
   # TODO: (RK) What about environments...? Those won't work correctly.
   e <- env%$%env; g <- env%$%ghost
-  g[[name]] <-
-    if (exists(name, envir = e, inherits = FALSE)) e[[name]]
-    else NULL
+  if (!exists(name, envir = g, inherits = FALSE))
+    g[[name]] <-
+      if (exists(name, envir = e, inherits = FALSE)) e[[name]]
+      else NULL
 
   `[[<-`(e, name, value)
   env
