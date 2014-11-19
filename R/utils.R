@@ -6,7 +6,7 @@ bare <- function(x) {
 }
 
 clear_environment <- function(env) {
-  rm(ls(env, all = TRUE), envir = env)
+  rm(list = ls(env, all = TRUE), envir = env)
 }
 
 benchmarks <- function(path, filter = '') {

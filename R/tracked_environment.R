@@ -49,6 +49,12 @@ ls.environment <- function(name, ...) base::ls(name, ...)
 
 #' @export
 rm <- function(..., envir) {
+  #call <- sys.call()
+  #browser()
+  # if (is.tracked_environment(envir))
+  #args <- substitute(alist(...))
+  #args$envir <- substitute(envir)
+  #do.call(
   base::rm(..., envir =
     if (is.tracked_environment(envir)) environment(envir) else envir)
 }
@@ -101,7 +107,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   (env%$%commits)$push(objectdiff(env, env))
   env%$%universe <- ls(env%$%env, all = TRUE)
   clear_environment(env%$%ghost)
-  out
+  env
 }
 
 #' Roll back commits to an earlier version of the tracked environment.
@@ -150,8 +156,10 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 #' @export
-`$.tracked_environment` <- function(env, ...) {
-  base::get(..., envir = env%$%env)
+`$.tracked_environment` <- function(env, name) {
+  if (exists(name, envir = environment(env), inherits = FALSE))
+    base::get(name, envir = environment(env))
+  else NULL
 }
 
 #' @export
