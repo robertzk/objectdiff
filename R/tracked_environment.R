@@ -33,7 +33,6 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
     list(env = env,
          ghost = new.env(parent = emptyenv()),
          universe = ls(env, all = TRUE),
-         staged = make_stack(),
          commits = make_stack())
   ))
 }
@@ -76,6 +75,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param value character. Commit message. May be \code{NULL}.
 #' @export
 `commit<-.tracked_environment` <- function(env, value) {
+  # TODO: (RK) Do something with the commit message..?
   out <- env%$%commits$push(squish_patches(env%$%ghost, env$staged$pop_all()))
   env%$%universe <- character(0)
   clear_environment(env%$%ghost)
