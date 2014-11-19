@@ -2,10 +2,14 @@
 % Please edit documentation in R/patch.R
 \name{is.patch}
 \alias{is.patch}
+\title{Check if an R object is a patch.}
 \usage{
 is.patch(x)
 }
 \arguments{
 \item{x}{ANY. Some R object.}
+}
+\description{
+Check if an R object is a patch.
 }
 
