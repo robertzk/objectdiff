@@ -53,7 +53,8 @@ setGeneric("objectdiff",
 
 setMethod('objectdiff', signature = c('ANY', 'ANY'),
   definition = function(old_object, new_object) {
-    trivial_patch(new_object)
+    if (identical(old_object, new_object)) identity_patch()
+    else trivial_patch(new_object)
   })
 
 

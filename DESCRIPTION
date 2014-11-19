@@ -31,5 +31,6 @@ Collate:
     'list.R'
     'objectdiff-package.r'
     'patch.R'
+    'squish.R'
     'tracked_environment.R'
     'utils.R'
