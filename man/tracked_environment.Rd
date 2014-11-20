@@ -32,6 +32,9 @@ To create a tracked environment from any environment \code{e}, simply write
 A tracked_environment is itself an environment that contains
 \itemize{
   \item{\code{env}. }{The environment that is getting tracked.}
+  \item{\code{initial}. }{When the first commit is published, a full
+    copy of the original environment gets saved so that it can be
+    replayed during rollbacks.}
   \item{\code{ghost}. }{An environment that holds the "before" version
     of objects prior to committing a change. When a
     \code{tracked_environment} receives a commit, it will clear
