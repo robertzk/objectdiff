@@ -38,9 +38,11 @@ To create a tracked environment from any environment \code{e}, simply write
 A tracked_environment is itself an environment that contains
 \itemize{
   \item{\code{env}. }{The environment that is getting tracked.}
-  \item{\code{initial}. }{When the first commit is published, a full
+  \item{\code{reference}. }{When the first commit is published, a full
     copy of the original environment gets saved so that it can be
-    replayed during rollbacks.}
+    replayed during rollbacks. Any additional snapshots (i.e., full
+    copies of the environment) will be appended to this list at the
+    \code{snapshot} interval.}
   \item{\code{ghost}. }{An environment that holds the "before" version
     of objects prior to committing a change. When a
     \code{tracked_environment} receives a commit, it will clear
@@ -50,6 +52,9 @@ A tracked_environment is itself an environment that contains
     changes occur. This is re-computed after a commit.}
   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
     that represent the history of the \code{tracked_environment}}.
+  \item{\code{snapshot}. }{The integer number of commits to wait before
+    recording a full copy of the environment for rollbacks and for
+    peeking back to past commits.}
 }
 
 From within the objectdiff package, it is possible to access these

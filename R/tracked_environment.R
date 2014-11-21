@@ -39,11 +39,12 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
   copy_env(initial, env)
 
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
-    list(initial = initial,
+    list(reference = list(initial),
          env = env,
          ghost = new.env(parent = emptyenv()),
          universe = ls(env, all = TRUE),
-         commits = make_stack())
+         commits = make_stack(),
+         snapshot = snapshot)
   ))
 }
 #' @export
@@ -136,9 +137,11 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
 #'   \item{\code{env}. }{The environment that is getting tracked.}
-#'   \item{\code{initial}. }{When the first commit is published, a full
+#'   \item{\code{reference}. }{When the first commit is published, a full
 #'     copy of the original environment gets saved so that it can be
-#'     replayed during rollbacks.}
+#'     replayed during rollbacks. Any additional snapshots (i.e., full
+#'     copies of the environment) will be appended to this list at the
+#'     \code{snapshot} interval.}
 #'   \item{\code{ghost}. }{An environment that holds the "before" version
 #'     of objects prior to committing a change. When a
 #'     \code{tracked_environment} receives a commit, it will clear
@@ -148,6 +151,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #'     changes occur. This is re-computed after a commit.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment}}.
+#'   \item{\code{snapshot}. }{The integer number of commits to wait before
+#'     recording a full copy of the environment for rollbacks and for
+#'     peeking back to past commits.}
 #' }
 #' 
 #' From within the objectdiff package, it is possible to access these
@@ -211,7 +217,7 @@ assign <- function(x, value, envir, ...) {
 }
 
 replay <- function(env, count) {
-  copy_env(env%$%env, env%$%initial)
+  copy_env(env%$%env, (env%$%reference)[[1]]) # TODO: (RK) Use snapshot
 
   commits <- (env%$%commits)$peek_all()[seq_len(count)]
   for (commit in commits) { commit(env) }
