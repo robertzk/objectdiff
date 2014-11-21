@@ -129,3 +129,6 @@ test_that('it does not break function environment assignment', {
   expect_identical(environment(x), y)
 })
 
+test_that('get works for getting a variable from a tracked_environment', {
+})
+
