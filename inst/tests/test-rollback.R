@@ -56,3 +56,15 @@ test_that('it can roll back twice successfully', {
   expect_identical(e$x, 3)
 })
 
+test_that('it can roll back changes to a dataframe', {
+  e <- tracked_environment()
+  e$x <- iris
+  commit(e) <- 'First message'
+  e$x[1, 1] <- 1
+  commit(e) <- 'Second message'
+  e$x[1, 1] <- 2
+  commit(e) <- 'Third message'
+  rollback(e) <- 1
+  expect_equal(e$x[1, 1], 1)
+})
+
