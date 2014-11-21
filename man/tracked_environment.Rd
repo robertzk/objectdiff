@@ -51,7 +51,7 @@ A tracked_environment is itself an environment that contains
     fetching the names of all objects in) the \code{env} before any
     changes occur. This is re-computed after a commit.}
   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
-    that represent the history of the \code{tracked_environment}}.
+    that represent the history of the \code{tracked_environment})}.
   \item{\code{snapshot}. }{The integer number of commits to wait before
     recording a full copy of the environment for rollbacks and for
     peeking back to past commits.}
