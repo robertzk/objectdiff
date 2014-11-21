@@ -1,5 +1,9 @@
 context('patches')
 
+test_that('it can tell something is a patch', {
+  expect_true(is.patch(identity_patch()))
+})
+
 test_that('the identity patch has nothing in its environment', {
   expect_identical(environment(identity_patch()), emptyenv())
 })
