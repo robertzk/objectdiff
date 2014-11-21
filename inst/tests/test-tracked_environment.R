@@ -86,6 +86,8 @@ test_that('the replay function works', {
   x$x <- 1; commit(x) <- 'blah'
   x$x <- 2; commit(x) <- 'blah'
   x$x <- 3; commit(x) <- 'blah'
+  replay(x, 2)
+  expect_equal(x$x, 2)
   replay(x, 1)
   expect_equal(x$x, 1)
 })
