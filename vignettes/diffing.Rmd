@@ -37,4 +37,24 @@ We can now restore `iris3` given that we have `iris`:
 print(identical(iris3, patch2(patch1(iris))))
 ```
 
+The objectdiff function
+---------
+
+In general, any two R objects can be "diffed" against each other using
+the `objectdiff` function that this package provides. Good performance 
+will be obtained for atomic vectors, lists (including data.frame's),
+and recursive combinations of these (e.g., very heterogeneous lists),
+but for more complex transformations there may not be any gains. For example,
+diffing a character vector against a function is non-sensical and will
+produce a patch that completely forgets about the character vector and
+simply produces the function.
+
+
+```{r}
+# TODO: (RK) Fill in.
+```
+
+In any case, a valid patch will always be produced that is guaranteed
+to at least produce the same output object given the same input object
+it was diffed with.
 
