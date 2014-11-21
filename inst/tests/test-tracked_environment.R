@@ -140,4 +140,18 @@ test_that("get works for getting a variable from a tracked_environment's meta-en
   expect_identical(get('snapshot', envir = x, mode = 'meta'), 5)
 })
 
+test_that("get doesn't stop working for regular environments", {
+  x <- new.env()
+  x$x <- 1
+  expect_identical(get('x', envir = x), 1)
+})
+
+test_that("mode = 'meta' doesn't work for regular environments", {
+  x <- new.env()
+  x$x <- 1
+  expect_error(get('x', envir = x, mode = 'meta'))
+})
+
+
+
 
