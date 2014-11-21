@@ -9,13 +9,25 @@ library(objectdiff)
 
 # Diffing Arbitrary R objects
 
-The Avant API can be used to fetch credit decision information for particular loans to
-determine what the business rules in conjunction with a given model score might produce. This
-is very useful for backtesting strategies to determine business sanity. For example, we would
-usually like to generate amount and APR distributions based on a candidate future model to
-ensure it does not shift things too radically from a previous model.
+The objectdiff package can be used to create a function that allows you to 
+transform one object into another using a minimal amount of memory footprint.
+This can be very useful when you're performing, for example, a lot of data
+manipulation on data.frames in very small and modular steps and want
+to be able to go back to a previous state. Consider the following example.
 
-```{r, eval = FALSE, tidy = FALSE}
-# TODO: (RK) Fill in.
+```{r}
+iris2 <- iris
+iris2[1, 1] <- 1
+patch1 <- objectdiff(iris, iris2)
+iris3 <- iris2
+iris3[1, 1] <- 2
+patch2 <- objectdiff(iris2, iris3)
 ```
+
+The function `patch1` and `patch2` are closures that record the minimum amount
+of information necessary to turn the original `iris` object into `iris2` and
+then `iris3`. Instead of storing all three objects, which would be memory
+prohibited (especially on larger data sets), we can instead store `iris`
+along with its patches. This is a similar mechanism to many source control
+systems like Git.
 
