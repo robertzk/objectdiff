@@ -29,6 +29,7 @@ identity_patch <- function() {
 #'    "create a function that does nothing except return this object".
 #' @rdname patch
 trivial_patch <- function(object) as.patch(function(...) object)
+# TODO: (RK) Use copy_env for environments on trivial_patch
 
 #' Generate a patch for two atomic objects that are close in values.
 #'

@@ -30,8 +30,12 @@ tracked_environment <- function(env = new.env(parent = emptyenv())) {
   if (is.tracked_environment(env))
     stop("Recursion! Can't track an already-tracked environment.")
 
+  initial <- new.env(parent = emptyenv())
+  copy_env(initial, env)
+
   structure(class = 'tracked_environment', list2env(parent = emptyenv(),
-    list(env = env,
+    list(initial = initial,
+         env = env,
          ghost = new.env(parent = emptyenv()),
          universe = ls(env, all = TRUE),
          commits = make_stack())
@@ -110,7 +114,14 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param value integer. Number of commits to roll back.
 #' @export
 `rollback<-.tracked_environment` <- function(env, value) {
-  .NotYetImplemented()
+  stopifnot(is.numeric(value))
+  num_commits <- (env%$%commits)$count()
+
+  replay_count <- num_commits - value
+  if (replay_count < 0) stop("Cannot rollback ", value, " commits ",
+    "because only ", num_commits, " commits have been made.")
+
+  replay(env, replay_count)
 }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
@@ -120,6 +131,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
 #'   \item{\code{env}. }{The environment that is getting tracked.}
+#'   \item{\code{initial}. }{When the first commit is published, a full
+#'     copy of the original environment gets saved so that it can be
+#'     replayed during rollbacks.}
 #'   \item{\code{ghost}. }{An environment that holds the "before" version
 #'     of objects prior to committing a change. When a
 #'     \code{tracked_environment} receives a commit, it will clear
@@ -189,5 +203,18 @@ assign <- function(x, value, envir, ...) {
       envir[[x]] <- value
     } else base::assign(x, value, envir, ...)
   } else base::assign(x, value, ...)
+}
+
+replay <- function(env, count) {
+  copy_env(env%$%env, env%$%initial)
+
+  commits <- (env%$%commits)$peek_all()[seq_len(count)]
+  for (commit in commits) { commit(env) }
+
+  for (i in seq_len((env%$%commits)$count() - count)) {
+    (env%$%commits)$pop() # Remove these commits from history
+  }
+
+  env
 }
 

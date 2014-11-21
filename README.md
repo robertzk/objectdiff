@@ -52,7 +52,7 @@ print(e$x)
 Installation
 ------------
 
-This package is not yet available from CRAN (as of Oct 12, 2014).
+This package is not yet available from CRAN (as of Nov 20, 2014).
 To install the latest development builds directly from GitHub, run this instead:
 
 ```R
