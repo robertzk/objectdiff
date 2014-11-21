@@ -33,3 +33,11 @@ test_that('it can roll back to the initial environment', {
   expect_equal(e$x, NULL) # The environment should have been rolled back.
 })
 
+test_that('it errors when rolling back more than the number of commits', {
+  e <- tracked_environment()
+  e$x <- 1
+  commit(e) <- 'First message'
+  stopifnot(identical(e$x, 1))
+  expect_error(rollback(e) <- 2)
+})
+
