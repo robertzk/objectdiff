@@ -51,7 +51,9 @@ simply produces the function.
 
 
 ```{r}
-# TODO: (RK) Fill in.
+patch <- objectdiff(c(TRUE, FALSE), identity)
+print(c(all.equal(patch(1), identity), all.equal(patch(iris), identity),
+        all.equal(patch("basically anything becomes identity"), identity)))
 ```
 
 In any case, a valid patch will always be produced that is guaranteed
