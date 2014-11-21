@@ -31,3 +31,10 @@ prohibited (especially on larger data sets), we can instead store `iris`
 along with its patches. This is a similar mechanism to many source control
 systems like Git.
 
+We can now restore `iris3` given that we have `iris`:
+
+```{r}
+print(identical(iris3, patch2(patch1(iris))))
+```
+
+
