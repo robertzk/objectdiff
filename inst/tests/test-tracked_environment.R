@@ -135,3 +135,9 @@ test_that('get works for getting a variable from a tracked_environment', {
   expect_identical(get('x', envir = x), 1)
 })
 
+test_that("get works for getting a variable from a tracked_environment's meta-environment", {
+  x <- tracked_environment(snapshot = 5)
+  expect_identical(get('snapshot', envir = x, mode = 'meta'), 5)
+})
+
+
