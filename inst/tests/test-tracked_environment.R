@@ -117,3 +117,15 @@ test_that('the replay function works', {
   expect_equal(x$x, 1)
 })
 
+test_that('it errors when we try to assign environments directly', {
+  x <- tracked_environment()
+  expect_error(environment(x) <- new.env(), 'Cannot assign')
+})
+
+test_that('it does not break function environment assignment', {
+  x <- function() { }
+  y <- new.env()
+  environment(x) <- y
+  expect_identical(environment(x), y)
+})
+

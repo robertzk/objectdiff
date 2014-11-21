@@ -86,6 +86,15 @@ environment.tracked_environment <- as.environment.tracked_environment
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 #' @export
+`environment<-` <- function(env, value) UseMethod('environment<-')
+#' @export
+`environment<-.function` <- function(env, value) base::`environment<-`(env, value)
+#' @export
+`environment<-.tracked_environment` <- function(env, value) {
+  stop("Cannot assign environment of a tracked_environment directly.")
+}
+
+#' @export
 `commit<-` <- function(...) UseMethod('commit<-')
 #' @export
 `rollback<-` <- function(...) UseMethod('rollback<-')
