@@ -1,0 +1,21 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Diffing R objects}
+-->
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(objectdiff)
+```
+
+# Diffing Arbitrary R objects
+
+The Avant API can be used to fetch credit decision information for particular loans to
+determine what the business rules in conjunction with a given model score might produce. This
+is very useful for backtesting strategies to determine business sanity. For example, we would
+usually like to generate amount and APR distributions based on a candidate future model to
+ensure it does not shift things too radically from a previous model.
+
+```{r, eval = FALSE, tidy = FALSE}
+# TODO: (RK) Fill in.
+```
+
