@@ -119,7 +119,6 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' x$foo <- 1
 #' commit(x) <- 'First message'
 #' x$foo <- 2
-#' @export
 `commit<-.tracked_environment` <- function(env, value) {
   # TODO: (RK) Do something with the commit message..?
   (env%$%commits)$push(objectdiff(env, env))
@@ -132,11 +131,15 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   env
 }
 
+#' @rdname commit
+#' @export
+commit <- function(env, value = NULL) { commit(env) <- value }
+
 #' Roll back commits to an earlier version of the tracked environment.
 #'
+#' @rdname rollback
 #' @param env tracked_environment.
 #' @param value integer. Number of commits to roll back.
-#' @export
 `rollback<-.tracked_environment` <- function(env, value) {
   stopifnot(is.numeric(value))
   num_commits <- (env%$%commits)$count()
@@ -147,6 +150,10 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
   replay(env, replay_count)
 }
+
+#' @rdname rollback
+#' @export
+rollback <- function(env, value = 1) { rollback(env) <- value }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
