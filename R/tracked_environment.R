@@ -239,7 +239,6 @@ replay <- function(env, count) {
   }
 
   env%$%reference <- (env%$%reference)[seq_len(reference_index)]
-
   env
 }
 
