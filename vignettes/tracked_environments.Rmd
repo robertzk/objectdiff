@@ -13,3 +13,15 @@ When performing changes to R objects, just like in any programming languages,
 the changes become "lost" because the objects get overwritten. However,
 it may be very helpful to track changes you are making to your objects, so
 you can "roll back" to earlier versions.
+
+The `tracked_environment` object provided by this package is like a normal
+R environment, except it remembers any changes that were made. It is also
+smart about recording the changes, keeping a minimal memory footprint
+that tries to avoid full object duplication.
+
+```{r}
+env <- tracked_environment()
+# TODO: (RK) Fill in
+```
+
+For more help, see the documentation by typing `?tracked_environment` in the R console.
