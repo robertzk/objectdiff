@@ -15,6 +15,11 @@ test_that("it doesn't allow recursively tracked environments", {
   expect_error(tracked_environment(tracked_environment(new.env())), "Recursion")
 })
 
+test_that("the $ operator works", {
+  x <- tracked_environment(list2env(list(x = 1)))
+  expect_identical(x$x, 1)
+})
+
 test_that('it can assign to the underlying environment', {
   x <- new.env()
   tx <- tracked_environment(x)
@@ -91,3 +96,4 @@ test_that('the replay function works', {
   replay(x, 1)
   expect_equal(x$x, 1)
 })
+
