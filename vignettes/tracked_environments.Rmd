@@ -31,4 +31,11 @@ commit(env) <- "Overwrote same value"
 print(env$data[1, 1])
 ```
 
+Now we can go back in time!
+
+```{r}
+rollback(env) <- 1 # Go back one commit
+print(env$data[1, 1])
+```
+
 For more help, see the documentation by typing `?tracked_environment` in the R console.
