@@ -25,6 +25,11 @@ test_that("the [[ operator works", {
   expect_identical(x[['x']], 1)
 })
 
+test_that("the meta-environment %$% infix operator works", {
+  x <- tracked_environment(list2env(list(x = 1)))
+  expect_identical(as.list(x%$%env), list(x = 1))
+})
+
 test_that('it can assign to the underlying environment', {
   x <- new.env()
   tx <- tracked_environment(x)
