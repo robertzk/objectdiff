@@ -130,5 +130,8 @@ test_that('it does not break function environment assignment', {
 })
 
 test_that('get works for getting a variable from a tracked_environment', {
+  x <- tracked_environment()
+  x$x <- 1
+  expect_identical(get('x', envir = x), 1)
 })
 
