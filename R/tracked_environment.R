@@ -11,7 +11,7 @@
 #'   all changes will be remembered whenever a "commit" is registered
 #'   on the environment. Commits can be named and labeled. The default is
 #'   \code{new.env(parent = emptyenv())} (a new environment with no parent).
-#' @param snapshot integer The interval at which to snapshot the environment.
+#' @param snapshot integer. The interval at which to snapshot the environment.
 #'   For example, if 100 commits have been made, and you would like to go
 #'   back to commit 95, it would be very time-consuming to apply all
 #'   the commits starting from the beginning. Instead a full copy
