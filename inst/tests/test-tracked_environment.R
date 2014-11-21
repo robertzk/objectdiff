@@ -5,6 +5,10 @@ test_that('it can create a tracked_environment', {
   assert(tracked_environment(new.env()))
 })
 
+test_that('it can check that something is a tracked environment', {
+  expect_true(is.tracked_environment(tracked_environment()))
+})
+
 test_that('it can procure the underlying environment', {
   x <- new.env()
   expect_identical(environment(tracked_environment(x)), x)
