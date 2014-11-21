@@ -226,16 +226,19 @@ replay <- function(env, count) {
   snapshot <- env%$%snapshot
   reference_index <- 1 + floor(count / (length(env%$%reference) * snapshot))
 
+  rm(list = ls(env, all = TRUE), envir = env)
   copy_env(env%$%env, (env%$%reference)[[reference_index]])
 
+  seq2    <- function(x, y) { if (y >= x) seq(x, y) else integer(0) }
   commits <- (env%$%commits)$peek_all()[
-    seq(1 + (reference_index - 1) * snapshot, count)]
-  for (commit in commits) { commit(env) }
+    seq2(1 + (reference_index - 1) * snapshot, count)]
 
+  for (commit in commits) { commit(env) }
   for (i in seq_len((env%$%commits)$count() - count)) {
     (env%$%commits)$pop() # Remove these commits from history
-    # TODO: (RK) Pop off the reference frames as well 
   }
+
+  env%$%reference <- (env%$%reference)[seq_len(reference_index)]
 
   env
 }
