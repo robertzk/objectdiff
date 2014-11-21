@@ -129,3 +129,29 @@ test_that('it does not break function environment assignment', {
   expect_identical(environment(x), y)
 })
 
+test_that('get works for getting a variable from a tracked_environment', {
+  x <- tracked_environment()
+  x$x <- 1
+  expect_identical(get('x', envir = x), 1)
+})
+
+test_that("get works for getting a variable from a tracked_environment's meta-environment", {
+  x <- tracked_environment(snapshot = 5)
+  expect_identical(get('snapshot', envir = x, mode = 'meta'), 5)
+})
+
+test_that("get doesn't stop working for regular environments", {
+  x <- new.env()
+  x$x <- 1
+  expect_identical(get('x', envir = x), 1)
+})
+
+test_that("mode = 'meta' doesn't work for regular environments", {
+  x <- new.env()
+  x$x <- 1
+  expect_error(get('x', envir = x, mode = 'meta'))
+})
+
+
+
+

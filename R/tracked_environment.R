@@ -181,7 +181,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @export
 #' @rdname tracked_environment
 `%$%` <- function(env, name) {
-  base::get(deparse(substitute(name)), envir = env, inherits = FALSE)
+  get(deparse(substitute(name)), envir = env, inherits = FALSE, mode = 'meta')
 }
 
 #' @export
@@ -193,6 +193,20 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 #' @export
+get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits = TRUE) {
+  "This function has been overwritten by the objectdiff package."
+  "For the base R function, type base::get (or ?base::get to see documentation)."
+
+  if (is.tracked_environment(envir)) {
+    if (identical(mode, 'meta')) {
+      base::get(x, pos, envir, "any", inherits)
+    } else {
+      base::get(x, pos, envir%$%env, mode, inherits)
+    }
+  } else { base::get(x, pos, envir, mode, inherits) }
+}
+
+#' @export
 `[[.tracked_environment` <- function(env, name) {
   if (exists(name, envir = environment(env), inherits = FALSE))
     base::get(name, envir = environment(env))
@@ -201,7 +215,6 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 #' @export
 `$.tracked_environment` <- `[[.tracked_environment`
-# TODO: (RK) Overwrite base::get
 
 #' @export
 `$<-.tracked_environment` <- function(env, name, value) {
