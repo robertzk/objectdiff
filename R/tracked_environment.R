@@ -19,16 +19,21 @@
 #' @rdname tracked_environment
 #' @export
 #' @examples
-#' \dontrun{
-#'   e <- tracked_environment()
-#'   e$x <- 1
-#'   commit(e) <- 'First message'
-#'   e$x <- 2
-#'   commit(e) <- 'Second message'
-#'   stopifnot(identical(e$x, 2))
-#'   rollback(e) <- 1
-#'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
-#' }
+#' e <- tracked_environment()
+#' e$x <- 1
+#' commit(e) <- 'First message'
+#' e$x <- 2
+#' commit(e) <- 'Second message'
+#' stopifnot(identical(e$x, 2))
+#' rollback(e) <- 1
+#' stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
+#'
+#' classical_env <- list2env(list(x = 1, y = 2))
+#' e <- tracked_environment(classical_env, snapshot = 5)
+#' # Any changes to e will record full snapshots of the environment
+#' # every 5 commits. This way, when the environment is rolled back to an
+#' # earlier commit, it will not have to apply patches starting from the
+#' # very beginning.
 tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 10) {
   force(env)
   stopifnot(is.environment(env))
