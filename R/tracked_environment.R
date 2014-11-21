@@ -124,7 +124,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
   # TODO: (RK) Do something with the commit message..?
   (env%$%commits)$push(objectdiff(env, env))
   if ((env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)) {
-    snapshot(env)
+    `snapshot!`(env)
   }
 
   env%$%universe <- ls(env%$%env, all = TRUE)
@@ -258,7 +258,7 @@ replay <- function(env, count) {
   env
 }
 
-snapshot <- function(env) {
+`snapshot!` <- function(env) {
   stopifnot(is.tracked_environment(env))
   reference <- new.env(parent = emptyenv())
   copy_env(reference, env%$%env)
