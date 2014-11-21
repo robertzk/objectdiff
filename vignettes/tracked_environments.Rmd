@@ -21,7 +21,14 @@ that tries to avoid full object duplication.
 
 ```{r}
 env <- tracked_environment()
-# TODO: (RK) Fill in
+env$data <- iris
+commit(env) <- "Initial data" # To save changes, you have to "commit",
+ # just like in source control systems.
+env$data[1, 1] <- 1
+commit(env) <- "Changed a value"
+env$data[1, 1] <- 2
+commit(env) <- "Overwrote same value"
+print(env$data[1, 1])
 ```
 
 For more help, see the documentation by typing `?tracked_environment` in the R console.
