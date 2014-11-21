@@ -5,7 +5,7 @@
 \alias{tracked_environment}
 \title{An environment object that tracks changes made to its constituents.}
 \usage{
-tracked_environment(env = new.env(parent = emptyenv()))
+tracked_environment(env = new.env(parent = emptyenv()), snapshot = 10)
 
 env \%$\% name
 }
@@ -14,6 +14,12 @@ env \%$\% name
 all changes will be remembered whenever a "commit" is registered
 on the environment. Commits can be named and labeled. The default is
 \code{new.env(parent = emptyenv())} (a new environment with no parent).}
+
+\item{snapshot}{numeric. The interval at which to snapshot the environment.
+For example, if 100 commits have been made, and you would like to go
+back to commit 95, it would be very time-consuming to apply all
+the commits starting from the beginning. Instead a full copy
+of the environment will be made every \code{snapshot} commits.}
 
 \item{name}{character. When using the \code{\%$\%} infix operator,
 access a meta-datum from the \code{tracked_environment} (for example,

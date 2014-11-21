@@ -11,6 +11,11 @@
 #'   all changes will be remembered whenever a "commit" is registered
 #'   on the environment. Commits can be named and labeled. The default is
 #'   \code{new.env(parent = emptyenv())} (a new environment with no parent).
+#' @param snapshot numeric. The interval at which to snapshot the environment.
+#'   For example, if 100 commits have been made, and you would like to go
+#'   back to commit 95, it would be very time-consuming to apply all
+#'   the commits starting from the beginning. Instead a full copy
+#'   of the environment will be made every \code{snapshot} commits.
 #' @rdname tracked_environment
 #' @export
 #' @examples
@@ -24,7 +29,7 @@
 #'   rollback(e) <- 1
 #'   stopifnot(identical(e$x, 1)) # The changes have been rolled back one step.
 #' }
-tracked_environment <- function(env = new.env(parent = emptyenv())) {
+tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 10) {
   force(env)
   stopifnot(is.environment(env))
   if (is.tracked_environment(env))
