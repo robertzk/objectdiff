@@ -1,0 +1,15 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Tracked environments}
+-->
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(objectdiff)
+```
+
+# Tracked Environments
+
+When performing changes to R objects, just like in any programming languages,
+the changes become "lost" because the objects get overwritten. However,
+it may be very helpful to track changes you are making to your objects, so
+you can "roll back" to earlier versions.
