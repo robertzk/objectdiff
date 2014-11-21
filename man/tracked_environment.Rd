@@ -23,7 +23,7 @@ of the environment will be made every \code{snapshot} commits.}
 
 \item{name}{character. When using the \code{\%$\%} infix operator,
 access a meta-datum from the \code{tracked_environment} (for example,
-"env", "ghost", "universe", or "commits").}
+"env", "reference", "ghost", "universe", "commits", or "snapshot").}
 }
 \description{
 A typical R environment is like a mathematical set. It is a bag of

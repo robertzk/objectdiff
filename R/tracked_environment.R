@@ -150,7 +150,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
-#'    "env", "ghost", "universe", or "commits").
+#'    "env", "reference", "ghost", "universe", "commits", or "snapshot").
 #' @note
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
