@@ -114,6 +114,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
 #' @rdname commit
+#' @export
 #' @examples
 #' x <- tracked_environment()
 #' x$foo <- 1
@@ -137,6 +138,7 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 
 #' Roll back commits to an earlier version of the tracked environment.
 #'
+#' @export
 #' @rdname rollback
 #' @param env tracked_environment.
 #' @param value integer. Number of commits to roll back.
