@@ -224,7 +224,9 @@ replay <- function(env, count) {
   stopifnot(is.tracked_environment(env))
 
   snapshot <- env%$%snapshot
-  reference_index <- 1 + floor(count / (length(env%$%reference) * snapshot))
+  reference_index <-
+    if (snapshot > count) 1
+    else 1 + floor(count / ((length(env%$%reference) - 1) * snapshot))
 
   rm(list = ls(env, all = TRUE), envir = env)
   copy_env(env%$%env, (env%$%reference)[[reference_index]])

@@ -68,3 +68,16 @@ test_that('it can roll back changes to a dataframe', {
   expect_equal(e$x[1, 1], 1)
 })
 
+test_that('it can revert from a snapshot', {
+  e <- tracked_environment(snapshot = 2)
+  e$x <- iris
+  commit(e) <- 'First message'; e$x[1, 1] <- 1
+  commit(e) <- 'Second message'; e$x[1, 1] <- 2
+  commit(e) <- 'Third message'; e$x[1, 1] <- 3
+  commit(e) <- 'Fourth message'; e$x[1, 1] <- 4
+  commit(e) <- 'Fifth message'
+  expect_equal(length(e%$%reference), 3) # 2 snapshots
+  rollback(e) <- 1
+  expect_equal(length(e%$%reference), 2) # 1 snapshot
+})
+
