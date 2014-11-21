@@ -81,3 +81,11 @@ test_that('assign assignment ghosts', {
   expect_null((x%$%ghost)$x, NULL)
 })
 
+test_that('the replay function works', {
+  x <- tracked_environment()
+  x$x <- 1; commit(x) <- 'blah'
+  x$x <- 2; commit(x) <- 'blah'
+  x$x <- 3; commit(x) <- 'blah'
+  replay(x, 1)
+  expect_equal(x$x, 1)
+})
