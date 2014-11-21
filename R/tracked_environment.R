@@ -109,6 +109,10 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 `commit<-.tracked_environment` <- function(env, value) {
   # TODO: (RK) Do something with the commit message..?
   (env%$%commits)$push(objectdiff(env, env))
+  if ((env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)) {
+    snapshot(env)
+  }
+
   env%$%universe <- ls(env%$%env, all = TRUE)
   clear_environment(env%$%ghost)
   env
@@ -217,15 +221,30 @@ assign <- function(x, value, envir, ...) {
 }
 
 replay <- function(env, count) {
-  copy_env(env%$%env, (env%$%reference)[[1]]) # TODO: (RK) Use snapshot
+  stopifnot(is.tracked_environment(env))
 
-  commits <- (env%$%commits)$peek_all()[seq_len(count)]
+  snapshot <- env%$%snapshot
+  reference_index <- 1 + floor(count / (length(env%$%reference) * snapshot))
+
+  copy_env(env%$%env, (env%$%reference)[[reference_index]])
+
+  commits <- (env%$%commits)$peek_all()[
+    seq(1 + (reference_index - 1) * snapshot, count)]
   for (commit in commits) { commit(env) }
 
   for (i in seq_len((env%$%commits)$count() - count)) {
     (env%$%commits)$pop() # Remove these commits from history
+    # TODO: (RK) Pop off the reference frames as well 
   }
 
   env
+}
+
+snapshot <- function(env) {
+  stopifnot(is.tracked_environment(env))
+  reference <- new.env(parent = emptyenv())
+  copy_env(reference, env%$%env)
+
+  env%$%reference <- c(env%$%reference, reference)
 }
 
