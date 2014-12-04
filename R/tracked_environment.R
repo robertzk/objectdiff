@@ -79,7 +79,16 @@ as.environment <- function(...) UseMethod('as.environment')
 #' @export
 as.environment.tracked_environment <- function(env) { env%$%env }
 #' @export
-as.environment.character <- as.environment.list <-
+as.environment.character <-
+ function(...) base::as.environment(...)
+#' @export
+as.environment.list <-
+ function(...) base::as.environment(...)
+#' @export
+as.environment.environment <-
+ function(...) base::as.environment(...)
+#' @export
+as.environment.default <-
  function(...) base::as.environment(...)
 
 #' @export
@@ -95,6 +104,10 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 `environment<-` <- function(env, value) UseMethod('environment<-')
 #' @export
 `environment<-.function` <- function(env, value) base::`environment<-`(env, value)
+#' @export
+`environment<-.character` <- function(env, value) base::`environment<-`(env, value)
+#' @export
+`environment<-.default` <- function(env, value) base::`environment<-`(env, value)
 #' @export
 `environment<-.tracked_environment` <- function(env, value) {
   stop("Cannot assign environment of a tracked_environment directly.")
