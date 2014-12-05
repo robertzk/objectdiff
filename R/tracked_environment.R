@@ -96,6 +96,8 @@ environment <- function(...) UseMethod('environment')
 #' @export
 environment.function <- function(...) base::environment(...)
 #' @export
+environment.default <- function(...) base::environment(...)
+#' @export
 environment.tracked_environment <- as.environment.tracked_environment 
 #' @export
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
