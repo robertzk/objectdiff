@@ -6,7 +6,6 @@ before_install:
 install:
 - "./travis-tool.sh install_deps"
 - "./travis-tool.sh install_r testthat testthatsomemore parallel gbm"
-#- "./travis-tool.sh install_github robertzk/stagerunner"
 script: "./travis-tool.sh run_tests"
 after_failure:
 - "./travis-tool.sh dump_logs"
@@ -16,7 +15,7 @@ notifications:
     on_failure: change
   hipchat:
     rooms:
-      secure: JK4jiaG/f4QLz5jO0DsshMID3qxOEsr3g5+bk+zJu+b40zYTfBPZuIxdv5q6ImUWD8tM50UmLjWJ2XBodzXUGZNVVwAZgD56xIUcEfDy0wsa2r9LRsVnmqxo5Vq318ypWeCe+dR/6rWaiV97g0DOwg7nrqtrqYI/Fz80lUk8poo=
+      secure: ODHKOmZxBiiZPPsuBCcngZD+QKXHfEll1kpJCyB6ZAifEGwntYy3eS5XYfD3df8fH4OCUPpXQc3pLyX4oudP2UvXW5cu16F14ZW6zyD/WV0pfh2dbNmB2YmWwvD7nLkHcSAUuJl7TN7q8Uwmjox84fxYRXrk0f2EdMd+GHbw9QM=
     on_success: change
     on_failure: change
     template:
