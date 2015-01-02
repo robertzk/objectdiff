@@ -67,7 +67,7 @@ ls.default <- function(...) {
 }
 
 #' @export
-rm <- function(..., envir) {
+rm <- function(..., envir = as.environment(-1)) {
   base::rm(..., envir =
     if (is.tracked_environment(envir)) environment(envir) else envir)
 }
