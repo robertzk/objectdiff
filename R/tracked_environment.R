@@ -60,13 +60,11 @@ ls <- function(name, ...) UseMethod('ls')
 #' @export
 ls.tracked_environment <- function(name, ...) base::ls(environment(name), ...)
 #' @export
-ls.environment <- function(name, ...) base::ls(name, ...)
-#' @export
-ls.list <- function(...) base::ls(...)
-#' @export
-ls.data.frame <- function(...) base::ls(...)
-#' @export
-ls.default <- function(...) base::ls(...)
+ls.default <- function(...) {
+  call <- match.call()
+  call[[1]] <- base::ls
+  eval.parent(call)
+}
 
 #' @export
 rm <- function(..., envir) {
@@ -95,7 +93,11 @@ environment <- function(...) UseMethod('environment')
 #' @export
 environment.function <- function(...) base::environment(...)
 #' @export
-environment.default <- function(...) base::environment(...)
+environment.default <- function(...) {
+  call <- match.call()
+  call[[1]] <- base::environment
+  eval.parent(call)
+}
 #' @export
 environment.tracked_environment <- as.environment.tracked_environment 
 #' @export
