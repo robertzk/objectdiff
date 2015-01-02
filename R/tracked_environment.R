@@ -85,8 +85,7 @@ as.environment.character <-
 as.environment.list <-
  function(...) base::as.environment(...)
 #' @export
-as.environment.environment <-
- function(...) base::as.environment(...)
+as.environment.environment <- function(...) ..1
 #' @export
 as.environment.default <-
  function(...) base::as.environment(...)
