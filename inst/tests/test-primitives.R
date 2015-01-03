@@ -17,7 +17,6 @@ test_that('it does not break the ls function with the inherits parameter', {
   })
 })
 
-
 test_that('it does not break the rm function', {
   x <- 1
   rm('x', envir = environment(), inherits = FALSE)
