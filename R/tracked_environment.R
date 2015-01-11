@@ -43,7 +43,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
   initial <- new.env(parent = emptyenv())
   copy_env(initial, env)
 
-  structure(class = 'tracked_environment',
+  structure(class = c('tracked_environment', 'environment'),
             list2env(parent = emptyenv(),
     list(reference = list(initial),
          env = env,
