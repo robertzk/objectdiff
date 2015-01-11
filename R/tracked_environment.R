@@ -43,7 +43,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
   initial <- new.env(parent = emptyenv())
   copy_env(initial, env)
 
-  structure(class = c('tracked_environment', 'environment'),
+  structure(class = 'tracked_environment',
             list2env(parent = emptyenv(),
     list(reference = list(initial),
          env = env,
@@ -77,12 +77,6 @@ rm <- function(..., envir = as.environment(-1)) {
 as.environment <- function(...) UseMethod('as.environment')
 #' @export
 as.environment.tracked_environment <- function(env) { env%$%env }
-#' @export
-as.environment.character <-
- function(...) base::as.environment(...)
-#' @export
-as.environment.list <-
- function(...) base::as.environment(...)
 #' @export
 as.environment.environment <- function(...) ..1
 #' @export
