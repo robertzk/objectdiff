@@ -50,7 +50,6 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
          ghost = new.env(parent = emptyenv()),
          universe = ls(env, all = TRUE),
          commits = make_stack(),
-         head = 1,
          snapshot = snapshot)
   ))
 }
