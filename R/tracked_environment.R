@@ -198,12 +198,32 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 #' @examples
 #' env <- tracked_environment()
 #' env$x <- 1
-#' commit(e) <- 'first commit'
+#' commit(env) <- 'first commit'
 #' env$y <- 2
-#' commit(e) <- 'second commit'
+#' commit(env) <- 'second commit'
 #' force_push(env, 'first commit') # equivalent to force_push(env, 1)
 #' stopifnot(identical(as.list(environment(env)), list(x = 1)))
 force_push <- function(env, commit) {
+  stopifnot(is.tracked_environment(env))
+  if (length(commit) != 1) { stop(dQuote("commit"), " argument must be of length 1") }
+
+  if (is.numeric(commit)) {
+    stopifnot(commit >= 0)
+    stopifnot(commit <= (env%$%commits)$count())
+  } else if (is.character(commit)) {
+    index <- which(names((env%$%commits)$peek_all()) == commit)
+    if (length(index) > 1) {
+      warning(call. = FALSE, "multiple commits match name ", sQuote(commit))
+    } else if (length(index) == 0) {
+      stop("There is no commit with name ", sQuote(commit))
+    }
+
+    commit <- index
+  } else {
+    stop(dQuote("commit"), " argument must be of type numeric or character") }
+  }
+
+  replay(env, 0)
 }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
