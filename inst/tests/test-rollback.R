@@ -167,10 +167,11 @@ describe("silent rollbacks", {
     env$x <- 1; commit(env) <- 'first'
     env$y <- 2; commit(env) <- 'second'
     env$z <- 3; commit(env) <- 'third'
-    browser()
     rollback(env, silent = TRUE) <- 2
     env$y <- 4; commit(env) <- 'second'
     expect_identical(as.list(as.environment(env)), list(x = 1, y = 4))
+    rollback(env) <- -1
+    expect_identical(as.list(as.environment(env)), list(x = 1, y = 4, z = 3))
   })
 })
 

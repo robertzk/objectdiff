@@ -206,7 +206,7 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 #'     its ghost environment.}
 #'   \item{\code{universe}. }{Essentially just running \code{base::ls} (i.e.,
 #'     fetching the names of all objects in) the \code{env} before any
-#'     changes occur. This is re-computed after a commit.}
+#'     changes occur. This is re-computed after a commit or rollback.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment})}.
 #'   \item{\code{head}. }{The index of the current commit in the \code{commits}
@@ -308,6 +308,8 @@ replay <- function(env, count, silent = FALSE) {
     seq2(1 + (reference_index - 1) * snapshot, count)]
 
   for (commit in commits) { commit(env) }
+
+  `reset_environment!`(env) # Re-calculate the current universe.
 
   # In silent replays, we do not modify the commit chain or the reference chain
   if (identical(silent, FALSE)) {
