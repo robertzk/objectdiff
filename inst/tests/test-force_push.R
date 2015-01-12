@@ -39,7 +39,7 @@ test_that("it offers a warning when force pushing to a named commit matching mul
   env$x <- 1; commit(env) <- 'first'
   env$y <- 1; commit(env) <- 'first'
   env$z <- 1; commit(env) <- 'third'
-  expect_warning(force_push(env, 'first'), "multiple commits")
+  expect_warning(force_push(env, 'first'), "Multiple commits")
 })
 
 test_that("it errors when an invalid commit is force pushed to", {
