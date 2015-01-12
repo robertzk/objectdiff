@@ -170,6 +170,7 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' A named list of all commits.
 #'
 #' @param env tracked_environment.
+#' @export
 #' @return a named list of all commits, with each name corresponding
 #'   to the commit message, and each value a \code{patch} object
 #'   (a function that you can apply to a tracked environment to
