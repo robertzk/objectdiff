@@ -159,8 +159,13 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' @export
 #' @rdname rollback
 #' @param env tracked_environment.
+#' @param silent logical. Whether or not to commit a silent rollback.
+#'   If \code{TRUE}, the current chain of commits will not be pruned,
+#'   so it will be possible to use \code{rollback} with a negative
+#'   number to go back to a future commit. It is the user's responsibility
+#'   to ensure that the commit stack does not become corrupt. 
 #' @param value integer. Number of commits to roll back.
-`rollback<-.tracked_environment` <- function(env, value) {
+`rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
   num_commits <- (env%$%commits)$count()
 
