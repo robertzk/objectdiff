@@ -211,7 +211,7 @@ force_push <- function(env, commit) {
     stopifnot(commit >= 0)
     stopifnot(commit <= (env%$%commits)$count())
   } else if (is.character(commit)) {
-    index <- which(names(lapply((env%$%commits)$peek_all(), `[[`, 1)) == commit)
+    index <- which(vapply((env%$%commits)$peek_all(), names, character(1)) == commit)
     if (length(index) > 1) {
       warning(call. = FALSE, "multiple commits match name ", sQuote(commit))
     } else if (length(index) == 0) {

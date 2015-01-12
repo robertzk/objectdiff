@@ -24,3 +24,21 @@ test_that("it can force push to a previous commit, then force push to the future
     expect_identical(sort(ls(env)), letters[seq_len(i)])
   }
 })
+
+test_that("it can force push by name", {
+  env <- tracked_environment()
+  env$x <- 1; commit(env) <- 'first'
+  env$y <- 1; commit(env) <- 'second'
+  env$z <- 1; commit(env) <- 'third'
+  force_push(env, 'first')
+  expect_identical(as.list(as.environment(env)), list(x = 1))
+})
+
+test_that("it can overwrite commits after a force push backward", {
+  env <- tracked_environment()
+  env$x <- 1; commit(env) <- 'first'
+  env$y <- 1; commit(env) <- 'second'
+  env$z <- 1; commit(env) <- 'third'
+  force_push(env, 1)
+
+})
