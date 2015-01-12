@@ -40,12 +40,15 @@ expect_diff <- function(x, y, small) {
 }
 
 # An S3 class that implements a stack data structure.
+# This is not a proper stack, but supports the ability to provide a pointer
+# to the current "head".
 make_stack <- function() {
   elements <- list()
+  head <- 0
   structure(class = 'stack', list(
     clear      = function()  { elements <<- list() },
     empty      = function()  { length(elements) == 0 },
-    push       = function(x) { elements[[length(elements) + 1]] <<- x },
+    push       = function(x) { elements[[head <<- head + 1]] <<- x },
     peek       = function(n = 1)  {
       if (isTRUE(n)) return(elements)
       els <- seq(length(elements), length(elements) - n + 1)
@@ -55,12 +58,15 @@ make_stack <- function() {
     peek_all   = function() { elements },
     count      = function() { length(elements) },
     pop        = function()  {
-      if (length(elements) == 0) stop("objectdiff:::stack is empty")
-      tmp <- tail(elements, 1)[[1]]
-      elements[[length(elements)]] <<- NULL
+      if (head == 0) stop("objectdiff:::stack is empty")
+      tmp <- elements[[head]]
+      head <<- head - 1
+      elements[[head + 1]] <<- NULL
       tmp
     },
-    pop_all    = function()  { tmp <- elements; elements <<- list(); tmp }
+    pop_all    = function()  { tmp <- elements; elements <<- list(); head <<- 0; tmp },
+    head       = function() { head },
+    set_head   = function(new_head) { head <<- new_head }
   ))
 }                                                                      
 

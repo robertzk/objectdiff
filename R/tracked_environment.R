@@ -138,15 +138,13 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' commit(x) <- 'First message'
 #' x$foo <- 2
 `commit<-.tracked_environment` <- function(env, value) {
-  # TODO: (RK) Do something with the commit message..?
-  (env%$%commits)$push(objectdiff(env, env))
-  if ((env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)) {
+  (env%$%commits)$push(setNames(list(objectdiff(env, env)), value))
+
+  if (`need_snapshot?`(env)) {
     `snapshot!`(env)
   }
 
-  env%$%universe <- ls(env%$%env, all = TRUE)
-  clear_environment(env%$%ghost)
-  env
+  `reset_environment!`(env)
 }
 
 #' @rdname commit
@@ -158,22 +156,78 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' @export
 #' @rdname rollback
 #' @param env tracked_environment.
+#' @param silent logical. Whether or not to commit a silent rollback.
+#'   If \code{TRUE}, the current chain of commits will not be pruned,
+#'   so it will be possible to use \code{rollback} with a negative
+#'   number to go back to a future commit. It is the user's responsibility
+#'   to ensure that the commit stack does not become corrupt. 
+#' @note Rolling back 0 commits clears the current staged changes.
 #' @param value integer. Number of commits to roll back.
-`rollback<-.tracked_environment` <- function(env, value) {
+`rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
+  head_commit <- (env%$%commits)$head()
   num_commits <- (env%$%commits)$count()
 
-  replay_count <- num_commits - value
-  if (replay_count < 0) stop("Cannot rollback ", value, " commits ",
-    "because only ", num_commits, " commits have been made.")
+  replay_count <- head_commit - value
+  if (replay_count < 0) {
+    stop("Cannot rollback ", value, " commits ",
+         "because only ", head_commit, " commits have been made (relative ",
+         "to the current head).")
+  } else if (replay_count > num_commits) {
+    stop("Cannot rollforward ", -value, " commits ",
+         "because only ", num_commits, " commits have been made in total.")
+  }
 
-  replay(env, replay_count)
+  replay(env, replay_count, silent = silent)
 }
 
 #' @rdname rollback
 #' @export
-rollback <- function(env, value = 1) { rollback(env) <- value }
+rollback <- function(env, value = 1, silent = FALSE) { rollback(env, silent = silent) <- value }
 
+#' Force push a tracked environment to a given commit.
+#'
+#' Forcing pushing means restoring a tracked environment to what it looked like
+#' as of that commit. You can force push with either the commit index or
+#' the name of the commit.
+#'
+#' @param env tracked_environment. 
+#' @param commit integer or character. If character, the commit with this
+#'   name will be attempted for the force push. If there are multiple commits
+#'   with this same name, a warning will be issued.
+#' @export
+#' @examples
+#' env <- tracked_environment()
+#' env$x <- 1
+#' commit(env) <- 'first commit'
+#' env$y <- 2
+#' commit(env) <- 'second commit'
+#' force_push(env, 'first commit') # equivalent to force_push(env, 1)
+#' stopifnot(identical(as.list(environment(env)), list(x = 1)))
+force_push <- function(env, commit) {
+  stopifnot(is.tracked_environment(env))
+  if (length(commit) != 1) { stop(dQuote("commit"), " argument must be of length 1") }
+
+  if (is.numeric(commit)) {
+    stopifnot(commit >= 0)
+    stopifnot(commit <= (env%$%commits)$count())
+  } else if (is.character(commit)) {
+    index <- which(vapply((env%$%commits)$peek_all(), names, character(1)) == commit)
+    if (length(index) > 1) {
+      warning(call. = FALSE, "Multiple commits match name ", sQuote(commit))
+    } else if (length(index) == 0) {
+      stop("There is no commit with name ", sQuote(commit))
+    }
+
+    commit <- index[1]
+  } else {
+    stop(dQuote("commit"), " argument must be of type numeric or character")
+  }
+
+  replay(env, commit, silent = TRUE) # force pushing is silent by default
+}
+
+#' @rdname tracked_environment
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
 #'    "env", "reference", "ghost", "universe", "commits", or "snapshot").
@@ -192,7 +246,7 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 #'     its ghost environment.}
 #'   \item{\code{universe}. }{Essentially just running \code{base::ls} (i.e.,
 #'     fetching the names of all objects in) the \code{env} before any
-#'     changes occur. This is re-computed after a commit.}
+#'     changes occur. This is re-computed after a commit or rollback.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment})}.
 #'   \item{\code{snapshot}. }{The integer number of commits to wait before
@@ -205,7 +259,6 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 #' \code{some_tracked_env\%$\%commits}.
 #'
 #' @export
-#' @rdname tracked_environment
 `%$%` <- function(env, name) {
   get(deparse(substitute(name)), envir = env, inherits = FALSE, mode = 'meta')
 }
@@ -255,10 +308,11 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
   # Record the before-value in the ghost environment.
   # TODO: (RK) What about environments...? Those won't work correctly.
   e <- env%$%env; g <- env%$%ghost
-  if (!exists(name, envir = g, inherits = FALSE))
+  if (!exists(name, envir = g, inherits = FALSE)) {
     g[[name]] <-
       if (exists(name, envir = e, inherits = FALSE)) e[[name]]
       else NULL
+  }
 
   `[[<-`(e, name, value)
   env
@@ -273,7 +327,7 @@ assign <- function(x, value, envir, ...) {
   } else base::assign(x, value, ...)
 }
 
-replay <- function(env, count) {
+replay <- function(env, count, silent = FALSE) {
   stopifnot(is.tracked_environment(env))
 
   snapshot <- env%$%snapshot
@@ -288,13 +342,27 @@ replay <- function(env, count) {
   commits <- (env%$%commits)$peek_all()[
     seq2(1 + (reference_index - 1) * snapshot, count)]
 
-  for (commit in commits) { commit(env) }
-  for (i in seq_len((env%$%commits)$count() - count)) {
-    (env%$%commits)$pop() # Remove these commits from history
+  for (commit in commits) { commit[[1]](env) }
+
+  `reset_environment!`(env) # Re-calculate the current universe.
+
+  # In silent replays, we do not modify the commit chain or the reference chain
+  if (identical(silent, FALSE)) {
+    for (i in seq_len((env%$%commits)$count() - count)) {
+      (env%$%commits)$pop() # Remove these commits from history
+    }
+
+    env%$%reference <- (env%$%reference)[seq_len(reference_index)]
+  } else {
+    # But we do have to update the head accordingly...
+    (env%$%commits)$set_head(count)
   }
 
-  env%$%reference <- (env%$%reference)[seq_len(reference_index)]
   env
+}
+
+`need_snapshot?` <- function(env) {
+  (env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)
 }
 
 `snapshot!` <- function(env) {
@@ -303,5 +371,11 @@ replay <- function(env, count) {
   copy_env(reference, env%$%env)
 
   env%$%reference <- c(env%$%reference, reference)
+}
+
+`reset_environment!` <- function(env) {
+  env%$%universe <- ls(env%$%env, all = TRUE)
+  clear_environment(env%$%ghost)
+  env
 }
 

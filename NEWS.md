@@ -1,3 +1,14 @@
+# Version 0.2.1
+
+* A new exported function `force_push`. It allows a `tracked_environment` to revert
+  to its state as of any given commit, specified either by numerical index or by name.
+
+* The `rollback` and `rollback<-` functions support a `silent` parameter that
+  controls whether or not to prune the commit history after rolling back.
+  This can be useful when one wishes to revert to an earlier state, while 
+  retaining the ability to "roll forward" back to the future unless a
+  change is made.
+
 # Version 0.2.0
 
 * Introduced a `tracked_environment` object. This is like an `environment`,
