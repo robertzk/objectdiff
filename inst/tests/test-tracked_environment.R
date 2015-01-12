@@ -159,7 +159,7 @@ test_that("it allows parent.env getting", {
   expect_identical(parent.env(environment(x)), z)
 })
 
-test_that("it allows parent.env getting", {
+test_that("it allows parent.env assignment", {
   z <- new.env()
   y <- new.env(parent = z)
   x <- tracked_environment(y)
