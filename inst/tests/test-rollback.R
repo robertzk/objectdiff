@@ -1,5 +1,15 @@
 context('rollback')
 
+test_that('it can roll back 0, and doing so is a trivial operation', {
+  e <- tracked_environment()
+  e$x <- 1
+  commit(e) <- 'First message'
+  e$y <- 2
+  commit(e) <- 'Second message'
+  rollback(e) <- 0
+  expect_identical(as.list(as.environment(e)), list(x = 1, y = 2))
+})
+
 test_that('it can roll back a simple example', {
   e <- tracked_environment()
   e$x <- 1

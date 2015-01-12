@@ -167,11 +167,12 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' @param value integer. Number of commits to roll back.
 `rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
-  num_commits <- (env%$%commits)$count()
+  num_commits <- (env%$%commits)$head()
 
   replay_count <- num_commits - value
   if (replay_count < 0) stop("Cannot rollback ", value, " commits ",
-    "because only ", num_commits, " commits have been made.")
+    "because only ", num_commits, " commits have been made (relative ",
+    "to the current head).")
 
   replay(env, replay_count)
 }
