@@ -16,6 +16,7 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
     }
 
     patch <- function(object) { }
+    environment(patch) <- new.env(parent = baseenv())
     append_body <- function(patch, line) {
       eval.parent(substitute(body(patch)[[length(body(patch)) + 1]] <- quote(line)))
     }
