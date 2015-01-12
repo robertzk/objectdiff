@@ -151,6 +151,17 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @export
 commit <- function(env, value = NULL) { commit(env) <- value }
 
+#' A named list of all commits.
+#'
+#' @param env tracked_environment.
+#' @return a named list of all commits, with each name corresponding
+#'   to the commit message, and each value a \code{patch} object
+#'   (a function that you can apply to a tracked environment to
+#'   perform that commit).
+commits <- function(env) {
+  Reduce(append, (env%$%commits)$peek_all())
+}
+
 #' Roll back commits to an earlier version of the tracked environment.
 #'
 #' @export

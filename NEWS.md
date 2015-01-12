@@ -9,6 +9,9 @@
   retaining the ability to "roll forward" back to the future unless a
   change is made.
 
+* The `commits` function for fetching a named list of all commits of a
+  `tracked_environment`.
+
 # Version 0.2.0
 
 * Introduced a `tracked_environment` object. This is like an `environment`,
