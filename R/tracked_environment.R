@@ -50,6 +50,7 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
          ghost = new.env(parent = emptyenv()),
          universe = ls(env, all = TRUE),
          commits = make_stack(),
+         head = 1,
          snapshot = snapshot)
   ))
 }
@@ -176,7 +177,7 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
-#'    "env", "reference", "ghost", "universe", "commits", or "snapshot").
+#'    "env", "reference", "ghost", "universe", "commits", "head", or "snapshot").
 #' @note
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
@@ -195,6 +196,10 @@ rollback <- function(env, value = 1) { rollback(env) <- value }
 #'     changes occur. This is re-computed after a commit.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment})}.
+#'   \item{\code{head}. }{The index of the current commit in the \code{commits}
+#'    stack. By default, the length of the \code{commits} stack, although
+#'    this can change if we use "silent rollbacks" (see the \code{rollback}
+#'    method.}
 #'   \item{\code{snapshot}. }{The integer number of commits to wait before
 #'     recording a full copy of the environment for rollbacks and for
 #'     peeking back to past commits.}
