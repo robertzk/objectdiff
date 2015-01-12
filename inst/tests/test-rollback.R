@@ -135,5 +135,17 @@ describe("silent rollbacks", {
     rollback(env) <- 1
     expect_error(rollback(env) <- -1, "Cannot rollforward")
   })
+
+  test_that("a new commit after a rollforward has the expect behavior", {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    env$y <- 2; commit(env) <- 'second'
+    rollback(env, silent = TRUE) <- 1
+    rollback(env, silent = TRUE) <- -1
+    env$z <- 3; commit(env) <- 'third'
+    expect_identical(env$x, 1)
+    expect_identical(env$y, 2)
+    expect_identical(env$z, 3)
+  })
 })
 
