@@ -1,3 +1,5 @@
 vignettes/*.html
 vignettes/*.md
 
+**/.DS_Store
+
