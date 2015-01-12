@@ -171,6 +171,7 @@ describe("silent rollbacks", {
     env$y <- 4; commit(env) <- 'second'
     expect_identical(as.list(as.environment(env)), list(x = 1, y = 4))
     rollback(env) <- -1
+    # Note that z = 3 has been magically inferred due to diffing magic!
     expect_identical(as.list(as.environment(env)), list(x = 1, y = 4, z = 3))
   })
 })

@@ -226,6 +226,7 @@ force_push <- function(env, commit) {
   replay(env, commit, silent = TRUE) # force pushing is silent by default
 }
 
+#' @rdname tracked_environment
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
 #'    "env", "reference", "ghost", "universe", "commits", "head", or "snapshot").
@@ -261,7 +262,6 @@ force_push <- function(env, commit) {
 #' \code{some_tracked_env\%$\%commits}.
 #'
 #' @export
-#' @rdname tracked_environment
 `%$%` <- function(env, name) {
   get(deparse(substitute(name)), envir = env, inherits = FALSE, mode = 'meta')
 }
