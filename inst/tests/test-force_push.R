@@ -42,6 +42,11 @@ test_that("it offers a warning when force pushing to a named commit matching mul
   expect_warning(force_push(env, 'first'), "multiple commits")
 })
 
+test_that("it errors when an invalid commit is force pushed to", {
+  env <- tracked_environment()
+  expect_error(force_push(env, "blah"), "There is no commit")
+})
+
 test_that("it can overwrite commits after a force push backward", {
   env <- tracked_environment()
   env$x <- 1; commit(env) <- 'first'
