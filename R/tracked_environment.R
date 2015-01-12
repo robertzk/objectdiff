@@ -140,7 +140,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' x$foo <- 2
 `commit<-.tracked_environment` <- function(env, value) {
   # TODO: (RK) Do something with the commit message..?
-  (env%$%commits)$push(objectdiff(env, env))
+  (env%$%commits)$push(setNames(list(objectdiff(env, env)), value))
 
   if (`need_snapshot?`(env)) {
     `snapshot!`(env)
@@ -211,7 +211,7 @@ force_push <- function(env, commit) {
     stopifnot(commit >= 0)
     stopifnot(commit <= (env%$%commits)$count())
   } else if (is.character(commit)) {
-    index <- which(names((env%$%commits)$peek_all()) == commit)
+    index <- which(names(lapply((env%$%commits)$peek_all(), `[[`, 1)) == commit)
     if (length(index) > 1) {
       warning(call. = FALSE, "multiple commits match name ", sQuote(commit))
     } else if (length(index) == 0) {
@@ -345,7 +345,7 @@ replay <- function(env, count, silent = FALSE) {
   commits <- (env%$%commits)$peek_all()[
     seq2(1 + (reference_index - 1) * snapshot, count)]
 
-  for (commit in commits) { commit(env) }
+  for (commit in commits) { commit[[1]](env) }
 
   `reset_environment!`(env) # Re-calculate the current universe.
 
