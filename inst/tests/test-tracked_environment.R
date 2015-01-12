@@ -152,6 +152,19 @@ test_that("mode = 'meta' doesn't work for regular environments", {
   expect_error(get('x', envir = x, mode = 'meta'))
 })
 
+test_that("it allows parent.env getting", {
+  z <- new.env()
+  y <- new.env(parent = z)
+  x <- tracked_environment(y)
+  expect_identical(parent.env(environment(x)), z)
+})
 
-
+test_that("it allows parent.env getting", {
+  z <- new.env()
+  y <- new.env(parent = z)
+  x <- tracked_environment(y)
+  w <- new.env()
+  parent.env(x) <- w
+  expect_identical(parent.env(environment(x)), w)
+})
 

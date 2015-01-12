@@ -23,3 +23,17 @@ test_that('it does not break the rm function', {
   expect_false('x' %in% ls())
 })
 
+test_that('it does not break parent.env', {
+  x <- new.env()
+  y <- new.env(parent = x)
+  expect_identical(parent.env(y), x)
+})
+
+test_that('it does not break parent.env assignment', {
+  x <- new.env()
+  z <- new.env()
+  y <- new.env(parent = x)
+  parent.env(y) <- z
+  expect_identical(parent.env(y), z)
+})
+

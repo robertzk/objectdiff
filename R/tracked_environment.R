@@ -112,6 +112,22 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 #' @export
+`parent.env` <- function(env) UseMethod("parent.env")
+#' @export
+`parent.env.default` <- function(env) base::`parent.env`(env)
+#' @export
+`parent.env.tracked_environment` <- function(env) { base::`parent.env`(env%$%env) }
+#' @export
+`parent.env<-` <- function(env, value) UseMethod("parent.env<-")
+#' @export
+`parent.env<-.default` <- function(env, value) base::`parent.env<-`(env, value)
+#' @export
+`parent.env<-.tracked_environment` <- function(env, value) {
+  base::`parent.env<-`(env%$%env, value)
+  env
+}
+
+#' @export
 `commit<-` <- function(...) UseMethod('commit<-')
 #' @export
 `rollback<-` <- function(...) UseMethod('rollback<-')
