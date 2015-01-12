@@ -167,14 +167,20 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' @param value integer. Number of commits to roll back.
 `rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
-  num_commits <- (env%$%commits)$head()
+  head_commit <- (env%$%commits)$head()
+  num_commits <- (env%$%commits)$count()
 
-  replay_count <- num_commits - value
-  if (replay_count < 0) stop("Cannot rollback ", value, " commits ",
-    "because only ", num_commits, " commits have been made (relative ",
-    "to the current head).")
+  replay_count <- head_commit - value
+  if (replay_count < 0) {
+    stop("Cannot rollback ", value, " commits ",
+         "because only ", head_commit, " commits have been made (relative ",
+         "to the current head).")
+  } else if (replay_count > num_commits) {
+    stop("Cannot rollforward ", -value, " commits ",
+         "because only ", num_commits, " commits have been made in total.")
+  }
 
-  replay(env, replay_count)
+  replay(env, replay_count, silent = silent)
 }
 
 #' @rdname rollback
@@ -284,7 +290,7 @@ assign <- function(x, value, envir, ...) {
   } else base::assign(x, value, ...)
 }
 
-replay <- function(env, count) {
+replay <- function(env, count, silent = FALSE) {
   stopifnot(is.tracked_environment(env))
 
   snapshot <- env%$%snapshot
@@ -300,11 +306,19 @@ replay <- function(env, count) {
     seq2(1 + (reference_index - 1) * snapshot, count)]
 
   for (commit in commits) { commit(env) }
-  for (i in seq_len((env%$%commits)$count() - count)) {
-    (env%$%commits)$pop() # Remove these commits from history
+
+  # In silent replays, we do not modify the commit chain or the reference chain
+  if (identical(silent, FALSE)) {
+    for (i in seq_len((env%$%commits)$count() - count)) {
+      (env%$%commits)$pop() # Remove these commits from history
+    }
+
+    env%$%reference <- (env%$%reference)[seq_len(reference_index)]
+  } else {
+    # But we do have to update the head accordingly...
+    (env%$%commits)$set_head(count)
   }
 
-  env%$%reference <- (env%$%reference)[seq_len(reference_index)]
   env
 }
 

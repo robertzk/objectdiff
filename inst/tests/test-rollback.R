@@ -110,5 +110,13 @@ describe("silent rollbacks", {
     env$y <- 2; commit(env) <- 'second'
     rollback(env, silent = TRUE) <- 1
   })
+
+  test_that("it can it can roll back, then forward!", {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    env$y <- 2; commit(env) <- 'second'
+    rollback(env, silent = TRUE) <- 1
+    expect_null(env$y)
+  })
 })
 
