@@ -214,7 +214,7 @@ force_push <- function(env, commit) {
   } else if (is.character(commit)) {
     index <- which(vapply((env%$%commits)$peek_all(), names, character(1)) == commit)
     if (length(index) > 1) {
-      warning(call. = FALSE, "multiple commits match name ", sQuote(commit))
+      warning(call. = FALSE, "Multiple commits match name ", sQuote(commit))
     } else if (length(index) == 0) {
       stop("There is no commit with name ", sQuote(commit))
     }
@@ -230,7 +230,7 @@ force_push <- function(env, commit) {
 #' @rdname tracked_environment
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
-#'    "env", "reference", "ghost", "universe", "commits", "head", or "snapshot").
+#'    "env", "reference", "ghost", "universe", "commits", or "snapshot").
 #' @note
 #' A tracked_environment is itself an environment that contains
 #' \itemize{
@@ -249,10 +249,6 @@ force_push <- function(env, commit) {
 #'     changes occur. This is re-computed after a commit or rollback.}
 #'   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
 #'     that represent the history of the \code{tracked_environment})}.
-#'   \item{\code{head}. }{The index of the current commit in the \code{commits}
-#'    stack. By default, the length of the \code{commits} stack, although
-#'    this can change if we use "silent rollbacks" (see the \code{rollback}
-#'    method.}
 #'   \item{\code{snapshot}. }{The integer number of commits to wait before
 #'     recording a full copy of the environment for rollbacks and for
 #'     peeking back to past commits.}

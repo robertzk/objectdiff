@@ -23,7 +23,7 @@ of the environment will be made every \code{snapshot} commits.}
 
 \item{name}{character. When using the \code{\%$\%} infix operator,
 access a meta-datum from the \code{tracked_environment} (for example,
-"env", "reference", "ghost", "universe", "commits", "head", or "snapshot").}
+"env", "reference", "ghost", "universe", "commits", or "snapshot").}
 }
 \description{
 A typical R environment is like a mathematical set. It is a bag of
@@ -52,10 +52,6 @@ A tracked_environment is itself an environment that contains
     changes occur. This is re-computed after a commit or rollback.}
   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
     that represent the history of the \code{tracked_environment})}.
-  \item{\code{head}. }{The index of the current commit in the \code{commits}
-   stack. By default, the length of the \code{commits} stack, although
-   this can change if we use "silent rollbacks" (see the \code{rollback}
-   method.}
   \item{\code{snapshot}. }{The integer number of commits to wait before
     recording a full copy of the environment for rollbacks and for
     peeking back to past commits.}
