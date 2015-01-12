@@ -38,7 +38,7 @@ test_that('it errors when rolling back more than the number of commits', {
   e$x <- 1
   commit(e) <- 'First message'
   expect_identical(e$x, 1)
-  expect_error(rollback(e) <- 2)
+  expect_error(rollback(e) <- 2, "because only 1 commits have been made")
 })
 
 test_that('it can roll back twice successfully', {
