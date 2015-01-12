@@ -19,9 +19,9 @@ Force push a tracked environment to a given commit.
 \examples{
 env <- tracked_environment()
 env$x <- 1
-commit(e) <- 'first commit'
+commit(env) <- 'first commit'
 env$y <- 2
-commit(e) <- 'second commit'
+commit(env) <- 'second commit'
 force_push(env, 'first commit') # equivalent to force_push(env, 1)
 stopifnot(identical(as.list(environment(env)), list(x = 1)))
 }

@@ -220,10 +220,10 @@ force_push <- function(env, commit) {
 
     commit <- index
   } else {
-    stop(dQuote("commit"), " argument must be of type numeric or character") }
+    stop(dQuote("commit"), " argument must be of type numeric or character")
   }
 
-  replay(env, 0)
+  replay(env, commit, silent = TRUE) # force pushing is silent by default
 }
 
 #' @param name character. When using the \code{\%$\%} infix operator,
