@@ -141,13 +141,12 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 `commit<-.tracked_environment` <- function(env, value) {
   # TODO: (RK) Do something with the commit message..?
   (env%$%commits)$push(objectdiff(env, env))
-  if ((env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)) {
+
+  if (`need_snapshot?`(env)) {
     `snapshot!`(env)
   }
 
-  env%$%universe <- ls(env%$%env, all = TRUE)
-  clear_environment(env%$%ghost)
-  env
+  `reset_environment!`(env)
 }
 
 #' @rdname commit
@@ -180,7 +179,9 @@ commit <- function(env, value = NULL) { commit(env) <- value }
          "because only ", num_commits, " commits have been made in total.")
   }
 
-  replay(env, replay_count, silent = silent)
+  if (replay_count != 0) {
+    replay(env, replay_count, silent = silent)
+  }
 }
 
 #' @rdname rollback
@@ -272,10 +273,11 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
   # Record the before-value in the ghost environment.
   # TODO: (RK) What about environments...? Those won't work correctly.
   e <- env%$%env; g <- env%$%ghost
-  if (!exists(name, envir = g, inherits = FALSE))
+  if (!exists(name, envir = g, inherits = FALSE)) {
     g[[name]] <-
       if (exists(name, envir = e, inherits = FALSE)) e[[name]]
       else NULL
+  }
 
   `[[<-`(e, name, value)
   env
@@ -322,11 +324,21 @@ replay <- function(env, count, silent = FALSE) {
   env
 }
 
+`need_snapshot?` <- function(env) {
+  (env%$%commits)$count() > length(env%$%reference) * (env%$%snapshot)
+}
+
 `snapshot!` <- function(env) {
   stopifnot(is.tracked_environment(env))
   reference <- new.env(parent = emptyenv())
   copy_env(reference, env%$%env)
 
   env%$%reference <- c(env%$%reference, reference)
+}
+
+`reset_environment!` <- function(env) {
+  env%$%universe <- ls(env%$%env, all = TRUE)
+  clear_environment(env%$%ghost)
+  env
 }
 

@@ -8,9 +8,9 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
       stop("tracked_environments can only be diffed against themselves")
 
     deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
+    num_changed <- length(ls(new_object%$%ghost, all = TRUE))
 
-    if (length(deletions) == 0 &&
-        (num_changed <- length(ls(new_object%$%ghost, all = TRUE))) == 0) {
+    if (length(deletions) == 0 && num_changed == 0) {
       return(identity_patch()) # No changes!
     }
 
