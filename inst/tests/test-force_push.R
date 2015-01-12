@@ -48,5 +48,10 @@ test_that("it can overwrite commits after a force push backward", {
   env$y <- 1; commit(env) <- 'second'
   env$z <- 1; commit(env) <- 'third'
   force_push(env, 1)
-
+  env$y <- 2; commit(env) <- 'second'
+  env$z <- 3; commit(env) <- 'third'
+  expect_identical(as.list(as.environment(env)), list(x = 1, y = 2, z = 3))
+  rollback(env) <- 1
+  expect_identical(as.list(as.environment(env)), list(x = 1, y = 2))
 })
+
