@@ -184,7 +184,7 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 
 #' @rdname rollback
 #' @export
-rollback <- function(env, value = 1) { rollback(env) <- value }
+rollback <- function(env, value = 1, silent = FALSE) { rollback(env, silent = silent) <- value }
 
 #' Force push a tracked environment to a given commit.
 #'
