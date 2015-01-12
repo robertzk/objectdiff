@@ -162,6 +162,7 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #'   so it will be possible to use \code{rollback} with a negative
 #'   number to go back to a future commit. It is the user's responsibility
 #'   to ensure that the commit stack does not become corrupt. 
+#' @note Rolling back 0 commits clears the current staged changes.
 #' @param value integer. Number of commits to roll back.
 `rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
@@ -178,9 +179,7 @@ commit <- function(env, value = NULL) { commit(env) <- value }
          "because only ", num_commits, " commits have been made in total.")
   }
 
-  if (replay_count != 0) {
-    replay(env, replay_count, silent = silent)
-  }
+  replay(env, replay_count, silent = silent)
 }
 
 #' @rdname rollback

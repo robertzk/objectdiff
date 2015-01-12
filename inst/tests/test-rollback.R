@@ -91,6 +91,14 @@ test_that('it can revert from a snapshot', {
   expect_equal(length(e%$%reference), 2) # 1 snapshot
 })
 
+test_that("rolling back 0 commits clears the current changes", {
+  env <- tracked_environment()
+  env$x <- 1; commit(env) <- 'first'
+  env$y <- 2
+  rollback(env) <- 0
+  expect_equal(ls(env), 'x')
+})
+
 # tracked_environments also support "silent rollbacks", wherein
 # a previous commit is restored, but the commit history is not 
 # truncated. This means we can "peek" backwards in time, then
