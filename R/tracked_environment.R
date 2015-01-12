@@ -138,7 +138,6 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' commit(x) <- 'First message'
 #' x$foo <- 2
 `commit<-.tracked_environment` <- function(env, value) {
-  # TODO: (RK) Do something with the commit message..?
   (env%$%commits)$push(setNames(list(objectdiff(env, env)), value))
 
   if (`need_snapshot?`(env)) {
@@ -187,6 +186,10 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 rollback <- function(env, value = 1, silent = FALSE) { rollback(env, silent = silent) <- value }
 
 #' Force push a tracked environment to a given commit.
+#'
+#' Forcing pushing means restoring a tracked environment to what it looked like
+#' as of that commit. You can force push with either the commit index or
+#' the name of the commit.
 #'
 #' @param env tracked_environment. 
 #' @param commit integer or character. If character, the commit with this

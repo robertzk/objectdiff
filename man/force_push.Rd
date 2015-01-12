@@ -14,7 +14,9 @@ name will be attempted for the force push. If there are multiple commits
 with this same name, a warning will be issued.}
 }
 \description{
-Force push a tracked environment to a given commit.
+Forcing pushing means restoring a tracked environment to what it looked like
+as of that commit. You can force push with either the commit index or
+the name of the commit.
 }
 \examples{
 env <- tracked_environment()

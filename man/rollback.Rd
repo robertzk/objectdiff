@@ -7,7 +7,7 @@
 \usage{
 \method{rollback}{tracked_environment}(env, silent = FALSE) <- value
 
-rollback(env, value = 1)
+rollback(env, value = 1, silent = FALSE)
 }
 \arguments{
 \item{env}{tracked_environment.}
@@ -22,5 +22,8 @@ to ensure that the commit stack does not become corrupt.}
 }
 \description{
 Roll back commits to an earlier version of the tracked environment.
+}
+\note{
+Rolling back 0 commits clears the current staged changes.
 }
 
