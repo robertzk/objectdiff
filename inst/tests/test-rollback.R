@@ -88,11 +88,17 @@ test_that('it can revert from a snapshot', {
 #   env <- tracked_environment()
 #   env$x <- 1; commit(env) <- 'first'
 #   env$y <- 2; commit(env) <- 'second'
-#   rollback(e, silent = TRUE) <- 1
+#   rollback(env, silent = TRUE) <- 1
 #   # We rolled back one commit and now 'y' does not exist
 #   stopifnot(is.null(env$y))
-#   rollback(e) <- -1 # a "roll forward"
+#   rollback(env) <- -1 # a "roll forward"
 #   stopifnot(identical(env$y, 2))
 describe("silent rollbacks", {
+  test_that("it can entertain the silent = TRUE parameter", {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    env$y <- 2; commit(env) <- 'second'
+    rollback(env, silent = TRUE) <- 1
+  })
 })
 
