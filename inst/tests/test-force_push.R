@@ -34,6 +34,14 @@ test_that("it can force push by name", {
   expect_identical(as.list(as.environment(env)), list(x = 1))
 })
 
+test_that("it offers a warning when force pushing to a named commit matching multiple entries", {
+  env <- tracked_environment()
+  env$x <- 1; commit(env) <- 'first'
+  env$y <- 1; commit(env) <- 'first'
+  env$z <- 1; commit(env) <- 'third'
+  expect_warning(force_push(env, 'first'), "multiple commits")
+})
+
 test_that("it can overwrite commits after a force push backward", {
   env <- tracked_environment()
   env$x <- 1; commit(env) <- 'first'

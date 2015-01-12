@@ -218,7 +218,7 @@ force_push <- function(env, commit) {
       stop("There is no commit with name ", sQuote(commit))
     }
 
-    commit <- index
+    commit <- index[1]
   } else {
     stop(dQuote("commit"), " argument must be of type numeric or character")
   }
