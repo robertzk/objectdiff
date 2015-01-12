@@ -188,6 +188,24 @@ commit <- function(env, value = NULL) { commit(env) <- value }
 #' @export
 rollback <- function(env, value = 1) { rollback(env) <- value }
 
+#' Force push a tracked environment to a given commit.
+#'
+#' @param env tracked_environment. 
+#' @param commit integer or character. If character, the commit with this
+#'   name will be attempted for the force push. If there are multiple commits
+#'   with this same name, a warning will be issued.
+#' @export
+#' @examples
+#' env <- tracked_environment()
+#' env$x <- 1
+#' commit(e) <- 'first commit'
+#' env$y <- 2
+#' commit(e) <- 'second commit'
+#' force_push(env, 'first commit') # equivalent to force_push(env, 1)
+#' stopifnot(identical(as.list(environment(env)), list(x = 1)))
+force_push <- function(env, commit) {
+}
+
 #' @param name character. When using the \code{\%$\%} infix operator,
 #'    access a meta-datum from the \code{tracked_environment} (for example,
 #'    "env", "reference", "ghost", "universe", "commits", "head", or "snapshot").

@@ -49,7 +49,7 @@ A tracked_environment is itself an environment that contains
     its ghost environment.}
   \item{\code{universe}. }{Essentially just running \code{base::ls} (i.e.,
     fetching the names of all objects in) the \code{env} before any
-    changes occur. This is re-computed after a commit.}
+    changes occur. This is re-computed after a commit or rollback.}
   \item{\code{commits}. }{A list of commits (a curated list of \code{patch}es
     that represent the history of the \code{tracked_environment})}.
   \item{\code{head}. }{The index of the current commit in the \code{commits}
