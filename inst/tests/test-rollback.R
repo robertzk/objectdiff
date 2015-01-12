@@ -111,12 +111,29 @@ describe("silent rollbacks", {
     rollback(env, silent = TRUE) <- 1
   })
 
-  test_that("it can it can roll back, then forward!", {
+  test_that("it can it can roll back silently like a normal rollback", {
     env <- tracked_environment()
     env$x <- 1; commit(env) <- 'first'
     env$y <- 2; commit(env) <- 'second'
     rollback(env, silent = TRUE) <- 1
     expect_null(env$y)
+  })
+
+  test_that("it can it can roll back, then forward!", {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    env$y <- 2; commit(env) <- 'second'
+    rollback(env, silent = TRUE) <- 1
+    rollback(env, silent = TRUE) <- -1
+    expect_identical(env$y, 2)
+  })
+
+  test_that("a non-silent rollforward fails", {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    env$y <- 2; commit(env) <- 'second'
+    rollback(env) <- 1
+    expect_error(rollback(env) <- -1, "Cannot rollforward")
   })
 })
 
