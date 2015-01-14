@@ -37,8 +37,9 @@
 tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 10) {
   force(env)
   stopifnot(is.environment(env))
-  if (is.tracked_environment(env))
+  if (is.tracked_environment(env)) {
     stop("Recursion! Can't track an already-tracked environment.")
+  }
 
   initial <- new.env(parent = emptyenv())
   copy_env(initial, env)
