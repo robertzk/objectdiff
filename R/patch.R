@@ -15,7 +15,19 @@ as.patch <- function(x) {
 #'
 #' @param x ANY. Some R object.
 #' @export
-is.patch <- function(x) { is(x, 'patch') }
+is.patch <- function(x) { inherits(x, 'patch') }
+
+#' Check if an R object is a trivial patch.
+#'
+#' A trivial patch stores a fully copy of the diffed object when no heuristics
+#' were found for determining object differences. In other words, it is the
+#' worst scenario and should be avoided.
+#'
+#' @param fn function. Any function.
+#' @return TRUE or FALSE according as the function is or is not a trivial patch.
+is.trivial_patch <- function(fn) {
+  is.patch(fn) && inherits(fn, 'trivial')
+}
 
 #' @rdname patch
 identity_patch <- function() {
@@ -28,8 +40,12 @@ identity_patch <- function() {
 #'    function created from \code{trivial_patch}. This is equivalent to
 #'    "create a function that does nothing except return this object".
 #' @rdname patch
-trivial_patch <- function(object) as.patch(function(...) object)
-# TODO: (RK) Use copy_env for environments on trivial_patch
+trivial_patch <- function(object) {
+  patch <- as.patch(function(...) object)
+  class(patch) <- c('trivial', class(patch))
+  patch
+  # TODO: (RK) Use copy_env for environments on trivial_patch
+}
 
 #' Generate a patch for two atomic objects that are close in values.
 #'
