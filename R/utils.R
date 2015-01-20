@@ -87,4 +87,13 @@ copy_env <- function(to, from) {
   }
 }
 
+# Compose multiple functions into one.
+# @examples
+# fn1 <- function(x) x + 1
+# fn2 <- function(x) x ^ 2
+# compose(fn1, fn2)(1) # will be (1+1)^2 = 4
+compose <- function(...) {
+  funs <- list(...)
+  function(z) { Reduce(function(y, w) w(y), funs, z) }
+}
 
