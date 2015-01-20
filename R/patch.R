@@ -33,8 +33,21 @@ is.trivial_patch <- function(fn) {
 identity_patch <- function() {
   patch <- function(...) ..1
   environment(patch) <- emptyenv()
-  as.patch(patch)
+  patch <- as.patch(patch)
+  class(patch) <- c('identity', class(patch))
+  patch
 }
+
+#' Check if an R object is an identity patch.
+#'
+#' The identity patch just returns the object that was passed in.
+#'
+#' @param fn function. Any function.
+#' @return TRUE or FALSE according as the function is or is not an identity patch.
+is.identity_patch <- function(fn) {
+  is.patch(fn) && inherits(fn, 'identity')
+}
+
 
 #' @param object ANY. An R object that will be returned by the
 #'    function created from \code{trivial_patch}. This is equivalent to

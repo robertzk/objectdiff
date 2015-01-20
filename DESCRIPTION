@@ -27,6 +27,7 @@ Collate:
     'objectdiff.R'
     'atomic.R'
     'data.frame.R'
+    'diff.R'
     'tracked_environment.R'
     'diff_tracked_environment.R'
     'environment.R'
