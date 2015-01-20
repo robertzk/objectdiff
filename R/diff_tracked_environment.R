@@ -8,7 +8,7 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
       stop("tracked_environments can only be diffed against themselves")
     }
 
-    diff(old_object, new_object)
+    as.patch(diff(old_object, new_object))
   })
 
  

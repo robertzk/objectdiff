@@ -3,9 +3,9 @@
 #' @param old_object list or tracked_environment.
 #' @param new_object list or tracked_environment.
 diff <- function(old_object, new_object) {
-  list(deletions, modifications, additions) %>%
-    lapply(invoke, old_object, new_object)  %>%
-    Filter(f = Negate(is.identity_patch))   %>%
+  list(deletions = deletions, modifications = modifications, additions = additions) %>%
+    invoke(old_object, new_object) %>%
+    Filter(f = Negate(is.identity_patch)) %>%
     map_call(compose)
 }
 
@@ -26,14 +26,22 @@ deletions.tracked_environment <- function(old_object, new_object) {
       rm(list = deletions, envir = object)
     })
   }
+}
 
-  if (length(deletions) > 0) {
-    append_body(patch, rm(list = deletions, envir = object))
-    environment(patch)$deletions <- deletions
-  }
+#' Compute a patch of modifications on a recursive object.
+#' 
+#' @inheritParams objectdiff
+modifications <- function(old_object, new_object) {
+  UseMethod("modifications")
+}
 
-  if (num_changed > 0) {
+modifications.tracked_environment <- function(old_object, new_object) {
+  num_changed <- length(ls(new_object%$%ghost, all = TRUE))
+
+  if (num_changed == 0) { identity_patch() } 
+  else {
     ghost <- new_object%$%ghost
+    deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
     additions <- setdiff(ls(new_object, all = TRUE), new_object%$%universe)
     changed_objects <- setdiff(ls(ghost, all = TRUE), c(deletions, additions))
     change_patches <- setNames(nm = changed_objects,
@@ -42,27 +50,35 @@ deletions.tracked_environment <- function(old_object, new_object) {
       }))
 
     if (length(changed_objects > 0)) {
-      append_body(patch, for (patch in names(change_patches)) {
-        object[[patch]] <- change_patches[[patch]](object[[patch]])
+      patch_template(list(change_patches = change_patches), {
+        for (patch in names(change_patches)) {
+          object[[patch]] <- change_patches[[patch]](object[[patch]])
+        }
       })
-      environment(patch)$change_patches <- change_patches
-    }
-
-    if (length(additions) > 0) {
-      append_body(patch, for (obj in names(new_objects)) {
-        object[[obj]] <- new_objects[[obj]]
-      })
-      environment(patch)$new_objects <- setNames(nm = additions,
-        lapply(additions, function(name) new_object[[name]]))
-    }
+    } else { identity_patch() } 
   }
-
-  append_body(patch, object)
-
-  as.patch(patch)
 }
 
-append_body <- function(patch, line) {
-  eval.parent(substitute(body(patch)[[length(body(patch)) + 1]] <- quote(line)))
+
+#' Compute a patch of additions on a recursive object.
+#' 
+#' @inheritParams objectdiff
+additions <- function(old_object, new_object) {
+  UseMethod("additions")
+}
+
+additions.tracked_environment <- function(old_object, new_object) {
+  num_changed <- length(ls(new_object%$%ghost, all = TRUE))
+
+  if (num_changed == 0) { identity_patch() } 
+  else {
+    additions <- setdiff(ls(new_object, all = TRUE), new_object%$%universe)
+    patch_template(list(new_objects = setNames(nm = additions, 
+      lapply(additions, function(name) new_object[[name]]))), {
+      for (obj in names(new_objects)) {
+        object[[obj]] <- new_objects[[obj]]
+      }
+    })
+  }
 }
 
