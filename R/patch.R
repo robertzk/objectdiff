@@ -60,6 +60,26 @@ trivial_patch <- function(object) {
   # TODO: (RK) Use copy_env for environments on trivial_patch
 }
 
+#' Create a patch from environment injected objects and body.
+#' @param provides list. Objects to inject into the 
+#'   patch's environment.
+#' @return A bodiless patch with parent base environment.
+#' @examples
+#' p <- patch_template(list(a = 1), { a + object })
+#' # function(object) { a + object } 
+#' # with environment containing a = 1
+#' stopifnot(p(1) == 2)
+patch_template <- function(provides, body) {
+  patch <- function(object) { }
+  body(patch) <- substitute(body)
+  if (length(provides) == 0) {
+    environment(patch) <- new.env(parent = baseenv())
+  } else {
+    environment(patch) <- list2env(provides, parent = baseenv())
+  }
+  patch
+}
+
 #' Generate a patch for two atomic objects that are close in values.
 #'
 #' @rdname patch

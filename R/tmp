@@ -1,30 +1,16 @@
-#' Compute a patch that takes a diff of a recursive object (list or tracked_environment).
-#'
-#' @param old_object list or tracked_environment.
-#' @param new_object list or tracked_environment.
-diff <- function(old_object, new_object) {
-  list(deletions, modifications, additions) %>%
-    lapply(invoke, old_object, new_object)  %>%
-    Filter(f = Negate(is.identity_patch))   %>%
-    map_call(compose)
-}
 
-#' Compute a patch of deletions on a recursive object.
-#' 
-#' @inheritParams objectdiff
-deletions <- function(old_object, new_object) {
-  UseMethod("deletions")
-}
 
-deletions.tracked_environment <- function(old_object, new_object) {
   deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
+  num_changed <- length(ls(new_object%$%ghost, all = TRUE))
 
-  if (length(deletions) == 0) {
-    return(identity_patch())
-  } else {
-    patch_template(list(deletions = deletions), {
-      rm(list = deletions, envir = object)
-    })
+  if (length(deletions) == 0 && num_changed == 0) {
+    return(identity_patch()) # No changes!
+  }
+
+  patch <- function(object) { }
+  environment(patch) <- new.env(parent = baseenv())
+  append_body <- function(patch, line) {
+    eval.parent(substitute(body(patch)[[length(body(patch)) + 1]] <- quote(line)))
   }
 
   if (length(deletions) > 0) {
@@ -60,9 +46,3 @@ deletions.tracked_environment <- function(old_object, new_object) {
   append_body(patch, object)
 
   as.patch(patch)
-}
-
-append_body <- function(patch, line) {
-  eval.parent(substitute(body(patch)[[length(body(patch)) + 1]] <- quote(line)))
-}
-
