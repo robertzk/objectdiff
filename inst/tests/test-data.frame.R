@@ -8,7 +8,8 @@ test_that('it can patch a data.frame with a small patch', {
   # See: https://github.com/robertzk/objectdiff/issues/11
 })
 
-test_that('it can record dropping of rows', {
+# https://github.com/robertzk/objectdiff/issues/35
+test_that('it can record dropping of rows #35', {
   iris2 <- iris
   iris2 <- iris2[-1, ]
   expect_diff(iris, iris2)
