@@ -52,14 +52,6 @@ test_that('it can patch a small attribute change with a small patch', {
   expect_diff(x, y, small = 5000)
 })
 
-test_that('it can patch a data.frame with a small patch', {
-  iris2 <- iris
-  iris2[1, 1] <- NA
-  expect_diff(iris, iris2, small = 3000)
-  # Should be even smaller
-  # See: https://github.com/robertzk/objectdiff/issues/11
-})
-
 test_that('it can add drop named list elements without a full patch', {
   expect_false(is.trivial_patch(objectdiff(iris, iris[-1])))
 })
