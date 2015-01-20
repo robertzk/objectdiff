@@ -27,9 +27,9 @@ Roxygen: list(wrap = FALSE)
 Collate:
     'objectdiff.R'
     'atomic.R'
-    'data.frame.R'
     'diff.R'
     'diff_list.R'
+    'data.frame.R'
     'tracked_environment.R'
     'diff_tracked_environment.R'
     'environment.R'

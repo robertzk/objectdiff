@@ -21,7 +21,12 @@ setMethod('objectdiff', signature = c('list', 'list'),
 #' @return a \code{\link{patch}} translating the \code{old_object} to
 #'    the \code{new_object}.
 heterogeneous_list_patch <- function(old_object, new_object) {
-  trivial_patch(new_object)
+  if (is.null(names(old_object)) || is.null(names(new_object)) ||
+      anyDuplicated(names(old_object)) > 0 || anyDuplicated(names(new_object)) > 0) {
+    trivial_patch(new_object)
+  } else {
+    diff(old_object, new_object)
+  }
 }
 
 #' Compute a patch between two same-name same-length lists.

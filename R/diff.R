@@ -6,7 +6,8 @@ diff <- function(old_object, new_object) {
   list(deletions = deletions, modifications = modifications, additions = additions) %>%
     invoke(old_object, new_object) %>%
     Filter(f = Negate(is.identity_patch)) %>%
-    map_call(compose)
+    map_call(compose) %>%
+    as.patch()
 }
 
 #' Compute a patch of deletions on a recursive object.
