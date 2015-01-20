@@ -1,6 +1,6 @@
 # TODO: (RK) Implement smart list diffing.
 
-additions.list <- function(old_object, new_object) {
+deletions.list <- function(old_object, new_object) {
   .NotYetImplemented()
 }
 
