@@ -14,7 +14,8 @@ Authors@R: c(person("Robert", "Krzyzanowski",
 Depends:
     R (>= 3.0.0)
 Imports:
-    methods
+    methods,
+    lowliner
 Suggests:
     testthat,
     testthatsomemore,

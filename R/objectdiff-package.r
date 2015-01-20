@@ -6,5 +6,5 @@
 #'
 #' @name objectdiff
 #' @docType package
-#' @import methods
+#' @import methods lowliner
 NULL
