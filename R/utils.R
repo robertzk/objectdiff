@@ -97,3 +97,5 @@ compose <- function(...) {
   function(z) { Reduce(function(y, w) w(y), funs, z) }
 }
 
+invoke <- function(f, ...) { f(...) }
+

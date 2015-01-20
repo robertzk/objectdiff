@@ -3,7 +3,10 @@
 #' @param old_object list or tracked_environment.
 #' @param new_object list or tracked_environment.
 diff <- function(old_object, new_object) {
-  compose(deletions, modifications, additions)(old_object, new_object)
+  functions <- Filter(Negate(is.identity_patch),
+    lapply(list(deletions, modifications, additions),
+                invoke, old_object, new_object))
+  return(do.call(compose, functions))
 
   deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
   num_changed <- length(ls(new_object%$%ghost, all = TRUE))
