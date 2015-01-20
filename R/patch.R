@@ -77,7 +77,7 @@ patch_template <- function(provides, body) {
   } else {
     environment(patch) <- list2env(provides, parent = baseenv())
   }
-  patch
+  as.patch(patch)
 }
 
 #' Generate a patch for two atomic objects that are close in values.

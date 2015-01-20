@@ -22,7 +22,9 @@ setMethod('objectdiff', signature = c('data.frame', 'data.frame'),
           # not modified, or a full check could take a long time.
           warning("Row dropping detected. Diff may not be accurate.", call. = FALSE)
 
-          trivial_patch(new_object)
+          # TODO: (RK) This will fail on row duplication.
+          subset <- match(row.names(new_object), row.names(old_object))
+          patch_template(list(subset = subset), { object[subset, ] })
         }
       } else {
         trivial_patch(new_object)
