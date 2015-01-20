@@ -31,6 +31,18 @@ test_that('it can calculate additions', {
   expect_equal(y$x, 1)
 })
 
+test_that('it can calculate modifications', {
+  x <- tracked_environment()
+  x <- tracked_environment(list2env(list(x = 1)))
+  x$x <- 2
+  patch <- objectdiff(x, x)
+
+  y <- tracked_environment(list2env(list(x = 3)))
+  patch(y)
+  expect_is(y, 'tracked_environment')
+  expect_equal(y$x, 2)
+})
+
 # TODO: (RK) Add way more!
 
 
