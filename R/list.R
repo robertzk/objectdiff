@@ -4,17 +4,25 @@
 #' @include objectdiff.R
 setMethod('objectdiff', signature = c('list', 'list'),
   definition = function(old_object, new_object) {
-    if (identical(old_object, new_object)) return(identity_patch())
-    if (length(old_object) != length(new_object) ||
+    if (identical(old_object, new_object)) { identity_patch() }
+    else if (length(old_object) != length(new_object) ||
         !identical(names(old_object), names(new_object))) {
       # TODO: (RK) Come up with better heuristics for this scenario,
       # like insertion and deletion detection, or name changes.
-      return(trivial_patch(new_object))
+      heterogeneous_list_patch(old_object, new_object)
+    } else {
+      homogeneous_list_patch(old_object, new_object)
     }
-
-    homogeneous_list_patch(old_object, new_object)
   })
 
+#' Compute a patch between two lists of different length or different names.
+#' 
+#' @inheritParams objectdiff
+#' @return a \code{\link{patch}} translating the \code{old_object} to
+#'    the \code{new_object}.
+heterogeneous_list_patch <- function(old_object, new_object) {
+  trivial_patch(new_object)
+}
 
 #' Compute a patch between two same-name same-length lists.
 #' 
