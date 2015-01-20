@@ -20,6 +20,17 @@ test_that('it can calculate removals', {
   expect_null(y$x)
 })
 
+test_that('it can calculate additions', {
+  x <- tracked_environment()
+  x$x <- 1
+  patch <- objectdiff(x, x)
+
+  y <- tracked_environment()
+  patch(y)
+  expect_is(y, 'tracked_environment')
+  expect_equal(y$x, 1)
+})
+
 # TODO: (RK) Add way more!
 
 
