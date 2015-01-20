@@ -52,7 +52,7 @@ test_that('it can patch a small attribute change with a small patch', {
   expect_diff(x, y, small = 5000)
 })
 
-test_that('it can add drop named list elements without a full patch', {
+test_that('it can drop named list elements without a full patch', {
   expect_diff(iris, iris[-1], trivial = FALSE)
 })
 

@@ -1,13 +1,13 @@
 # TODO: (RK) Implement smart list diffing.
 
 deletions.list <- function(old_object, new_object) {
-  deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
+  deletions <- setdiff(ls(old_object), ls(new_object))
 
-  if (length(deletions) == 0) {
-    return(identity_patch())
-  } else {
+  if (length(deletions) == 0) { return(identity_patch()) }
+  else {
     patch_template(list(deletions = deletions), {
       rm(list = deletions, envir = object)
+      object
     })
   }
 }
