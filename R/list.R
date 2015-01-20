@@ -21,6 +21,7 @@ setMethod('objectdiff', signature = c('list', 'list'),
 #' @return a \code{\link{patch}} translating the \code{old_object} to
 #'    the \code{new_object}.
 heterogeneous_list_patch <- function(old_object, new_object) {
+  
   trivial_patch(new_object)
 }
 
