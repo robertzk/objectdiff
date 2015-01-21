@@ -7,8 +7,6 @@ setMethod('objectdiff', signature = c('list', 'list'),
     if (identical(old_object, new_object)) { identity_patch() }
     else if (length(old_object) != length(new_object) ||
         !identical(names(old_object), names(new_object))) {
-      # TODO: (RK) Come up with better heuristics for this scenario,
-      # like insertion and deletion detection, or name changes.
       heterogeneous_list_patch(old_object, new_object)
     } else {
       homogeneous_list_patch(old_object, new_object)
