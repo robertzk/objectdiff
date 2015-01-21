@@ -34,7 +34,10 @@ setMethod('objectdiff', signature = c('data.frame', 'data.frame'),
     }
   })
 
+#' @export
 deletions.data.frame     <- deletions.list
+#' @export
 additions.data.frame     <- additions.list
+#' @export
 modifications.data.frame <- modifications.list
 
