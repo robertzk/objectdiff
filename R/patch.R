@@ -80,6 +80,14 @@ patch_template <- function(provides, body) {
   as.patch(patch)
 }
 
+#' Re-order names according to the names of object.
+#'
+#' @param object ANY. Any named R object (e.g., a named list).
+#' @note This only works on uniquely named objects.
+reorder_names_patch <- function(object) {
+  patch_template(list(names = names(object)), { object[names] })
+}
+
 #' Generate a patch for two atomic objects that are close in values.
 #'
 #' @rdname patch

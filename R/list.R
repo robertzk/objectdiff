@@ -26,7 +26,7 @@ heterogeneous_list_patch <- function(old_object, new_object) {
       anyDuplicated(names(old_object)) > 0 || anyDuplicated(names(new_object)) > 0) {
     trivial_patch(new_object)
   } else {
-    diff(old_object, new_object)
+    as.patch(compose(diff(old_object, new_object), reorder_names_patch(new_object)))
   }
 }
 

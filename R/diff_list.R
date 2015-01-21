@@ -22,7 +22,10 @@ modifications.list <- function(old_object, new_object) {
     if (identical(old_object[changes], new_object[changes])) {
       identity_patch()
     } else {
-      trivial_patch(changes)
+      patch_template(list(changed = changes, changes = new_object[changes]), {
+        object[changed] <- changes
+        object
+      })
     }
   }
 }

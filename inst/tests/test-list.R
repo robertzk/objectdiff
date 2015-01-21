@@ -21,6 +21,24 @@ test_that('it can patch a named non-trivial list to the trivial list', {
               small = TRUE, trivial = FALSE)
 })
 
+test_that('it can drop some values from a named list', {
+  expect_diff(list(a = 1, b = 2, c = 3), list(a = 1, c = 3), trivial = FALSE)
+})
+
+test_that('it can add some values to a named list', {
+  # TODO: (RK) Revisit this when smarter list modification heuristics are in place.
+  expect_diff(list(a = 1, c = 3), list(a = 1, b = 2, c = 3)) #, trivial = FALSE)
+})
+
+test_that('it can modify some values in a named list', {
+  # TODO: (RK) Revisit this when smarter list modification heuristics are in place.
+  expect_diff(list(a = 1, c = 3), list(a = 1, c = 2)) #, trivial = FALSE)
+})
+
+test_that('it can modify some values in a named list and add something', {
+  expect_diff(list(a = 1, c = 3), list(a = 1, b = 2, c = 4), trivial = FALSE)
+})
+
 test_that('it can patch a huge list with only a tiny change', {
   x <- as.list(1:10000)
   y <- x
