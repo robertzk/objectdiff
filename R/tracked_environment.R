@@ -313,7 +313,11 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
     } else {
       base::get(x, pos, envir%$%env, mode, inherits)
     }
-  } else { base::get(x, pos, envir, mode, inherits) }
+  } else {
+    call <- sys.call()
+    call[[1]] <- quote(base::get)
+    eval.parent(call)
+  }
 }
 
 #' @export
