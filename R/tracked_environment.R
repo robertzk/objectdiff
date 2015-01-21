@@ -85,17 +85,17 @@ as.environment.default <-
  function(...) base::as.environment(...)
 
 #' @export
-environment <- function(...) UseMethod('environment')
+environment <- function(fun) UseMethod('environment')
 #' @export
-environment.function <- function(...) base::environment(...)
+environment.function <- function(fun) base::environment(fun)
 #' @export
-environment.default <- function(...) {
+environment.default <- function(fun) {
   call <- match.call()
   call[[1]] <- base::environment
   eval.parent(call)
 }
 #' @export
-environment.tracked_environment <- as.environment.tracked_environment 
+environment.tracked_environment <- function(fun) { as.environment(fun) }
 #' @export
 is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
@@ -129,9 +129,9 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 }
 
 #' @export
-`commit<-` <- function(...) UseMethod('commit<-')
+`commit<-` <- function(env, value) { UseMethod('commit<-') }
 #' @export
-`rollback<-` <- function(...) UseMethod('rollback<-')
+`rollback<-` <- function(env, silent = FALSE, value) { UseMethod('rollback<-') }
 
 #' Commit a change to a tracked environment.
 #'
@@ -212,7 +212,9 @@ commits <- function(env) {
 
 #' @rdname rollback
 #' @export
-rollback <- function(env, value = 1, silent = FALSE) { rollback(env, silent = silent) <- value }
+rollback <- function(env, value = 1, silent = FALSE) {
+  rollback(env, silent = silent) <- value
+}
 
 #' Force push a tracked environment to a given commit.
 #'

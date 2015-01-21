@@ -33,8 +33,21 @@ is.trivial_patch <- function(fn) {
 identity_patch <- function() {
   patch <- function(...) ..1
   environment(patch) <- emptyenv()
-  as.patch(patch)
+  patch <- as.patch(patch)
+  class(patch) <- c('identity', class(patch))
+  patch
 }
+
+#' Check if an R object is an identity patch.
+#'
+#' The identity patch just returns the object that was passed in.
+#'
+#' @param fn function. Any function.
+#' @return TRUE or FALSE according as the function is or is not an identity patch.
+is.identity_patch <- function(fn) {
+  is.patch(fn) && inherits(fn, 'identity')
+}
+
 
 #' @param object ANY. An R object that will be returned by the
 #'    function created from \code{trivial_patch}. This is equivalent to
@@ -45,6 +58,34 @@ trivial_patch <- function(object) {
   class(patch) <- c('trivial', class(patch))
   patch
   # TODO: (RK) Use copy_env for environments on trivial_patch
+}
+
+#' Create a patch from environment injected objects and body.
+#' @param provides list. Objects to inject into the 
+#'   patch's environment.
+#' @return A bodiless patch with parent base environment.
+#' @examples
+#' p <- objectdiff:::patch_template(list(a = 1), { a + object })
+#' # function(object) { a + object } 
+#' # with environment containing a = 1
+#' stopifnot(p(1) == 2)
+patch_template <- function(provides, body) {
+  patch <- function(object) { }
+  body(patch) <- substitute(body)
+  if (length(provides) == 0) {
+    environment(patch) <- new.env(parent = baseenv())
+  } else {
+    environment(patch) <- list2env(provides, parent = baseenv())
+  }
+  as.patch(patch)
+}
+
+#' Re-order names according to the names of object.
+#'
+#' @param object ANY. Any named R object (e.g., a named list).
+#' @note This only works on uniquely named objects.
+reorder_names_patch <- function(object) {
+  patch_template(list(names = names(object)), { object[names] })
 }
 
 #' Generate a patch for two atomic objects that are close in values.
@@ -142,4 +183,6 @@ attributes_patch <- function(old_object, new_object) {
     objectdiff(attributes(old_object), attributes(new_object))
   as.patch(patch)
 }
+
+
 

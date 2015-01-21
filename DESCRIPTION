@@ -1,7 +1,7 @@
 Package: objectdiff
 Type: Package
 Title: Objectdiff
-Version: 0.2.1
+Version: 0.2.2
 Description: Objectdiff is an R package for measuring differences
     between arbitrary R objects using patches, a la Git. For example,
     if you have slightly modified a data.frame, and you would like to
@@ -14,7 +14,8 @@ Authors@R: c(person("Robert", "Krzyzanowski",
 Depends:
     R (>= 3.0.0)
 Imports:
-    methods
+    methods,
+    lowliner
 Suggests:
     testthat,
     testthatsomemore,
@@ -26,6 +27,8 @@ Roxygen: list(wrap = FALSE)
 Collate:
     'objectdiff.R'
     'atomic.R'
+    'diff.R'
+    'diff_list.R'
     'data.frame.R'
     'tracked_environment.R'
     'diff_tracked_environment.R'

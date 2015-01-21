@@ -7,8 +7,6 @@ setMethod('objectdiff', signature = c('list', 'list'),
     if (identical(old_object, new_object)) { identity_patch() }
     else if (length(old_object) != length(new_object) ||
         !identical(names(old_object), names(new_object))) {
-      # TODO: (RK) Come up with better heuristics for this scenario,
-      # like insertion and deletion detection, or name changes.
       heterogeneous_list_patch(old_object, new_object)
     } else {
       homogeneous_list_patch(old_object, new_object)
@@ -21,8 +19,13 @@ setMethod('objectdiff', signature = c('list', 'list'),
 #' @return a \code{\link{patch}} translating the \code{old_object} to
 #'    the \code{new_object}.
 heterogeneous_list_patch <- function(old_object, new_object) {
-  
-  trivial_patch(new_object)
+  if ((length(old_object) != 0 && is.null(names(old_object))) ||
+      (length(new_object) != 0 && is.null(names(new_object))) ||
+      anyDuplicated(names(old_object)) > 0 || anyDuplicated(names(new_object)) > 0) {
+    trivial_patch(new_object)
+  } else {
+    as.patch(compose(diff(old_object, new_object), reorder_names_patch(new_object)))
+  }
 }
 
 #' Compute a patch between two same-name same-length lists.
@@ -58,11 +61,13 @@ homogeneous_list_patch <- function(old_object, new_object) {
   # This takes 50ms on a 20k element list!
   differ <- !mapply(identical, old_object, new_object) # Note they are the same length.
 
-  if (mean(differ) > 0.5 && !wide) # If most differ in long list, just replace outright.
-    return(trivial_patch(new_object))
-
-  # For wide lists, it may always be beneficial to use a differences patch.
-  differences_patch(old_object, new_object, differ)
+  if (mean(differ) > 0.5 && !wide) {
+    # If most differ in long list, just replace outright.
+    trivial_patch(new_object)
+  } else {
+    # For wide lists, it may always be beneficial to use a differences patch.
+    differences_patch(old_object, new_object, differ)
+  }
 }
 
 #' Estimate the size of a list stochastically.
@@ -73,8 +78,8 @@ homogeneous_list_patch <- function(old_object, new_object) {
 #' @param list The list object whose size we are estimating.
 #' @param sampling_percentage numeric. Default is \code{0.05}.
 estimate_size <- function(list, sampling_percentage = 0.05) {
-  if (!is.list(list)) object.size(list)
-  else if ((len <- length(list)) <= 10) object.size(list)
+  if (!is.list(list)) { object.size(list) }
+  else if ((len <- length(list)) <= 10) { object.size(list) }
   else {
     chunk <- max(10, ceiling(len * sampling_percentage))
     sum(vapply(list[sample.int(len, size = chunk, replace = TRUE)],

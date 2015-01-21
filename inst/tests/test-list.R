@@ -12,6 +12,33 @@ test_that('it can patch a non-trivial list to the trivial list', {
   expect_diff(as.list(1:10), list(), small = TRUE)
 })
 
+test_that('it can patch the trivial list to a non-trivial named list', {
+  expect_diff(list(), setNames(as.list(1:10), letters[1:10]), small = TRUE, trivial = FALSE)
+})
+
+test_that('it can patch a named non-trivial list to the trivial list', {
+  expect_diff(setNames(as.list(1:10), letters[1:10]), structure(list(), names = character(0)),
+              small = TRUE, trivial = FALSE)
+})
+
+test_that('it can drop some values from a named list', {
+  expect_diff(list(a = 1, b = 2, c = 3), list(a = 1, c = 3), trivial = FALSE)
+})
+
+test_that('it can add some values to a named list', {
+  # TODO: (RK) Revisit this when smarter list modification heuristics are in place.
+  expect_diff(list(a = 1, c = 3), list(a = 1, b = 2, c = 3)) #, trivial = FALSE)
+})
+
+test_that('it can modify some values in a named list', {
+  # TODO: (RK) Revisit this when smarter list modification heuristics are in place.
+  expect_diff(list(a = 1, c = 3), list(a = 1, c = 2)) #, trivial = FALSE)
+})
+
+test_that('it can modify some values in a named list and add something', {
+  expect_diff(list(a = 1, c = 3), list(a = 1, b = 2, c = 4), trivial = FALSE)
+})
+
 test_that('it can patch a huge list with only a tiny change', {
   x <- as.list(1:10000)
   y <- x
@@ -52,16 +79,8 @@ test_that('it can patch a small attribute change with a small patch', {
   expect_diff(x, y, small = 5000)
 })
 
-test_that('it can patch a data.frame with a small patch', {
-  iris2 <- iris
-  iris2[1, 1] <- NA
-  expect_diff(iris, iris2, small = 3000)
-  # Should be even smaller
-  # See: https://github.com/robertzk/objectdiff/issues/11
-})
-
-test_that('it can add drop named list elements without a full patch', {
-  expect_false(is.trivial_patch(objectdiff(iris, iris[-1])))
+test_that('it can drop named list elements without a full patch', {
+  expect_diff(iris, iris[-1], trivial = FALSE)
 })
 
 

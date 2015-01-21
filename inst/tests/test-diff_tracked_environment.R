@@ -9,6 +9,40 @@ test_that('it can perform a diff on no changes', {
   expect_true(setequal(as.list(environment(y)), lst))
 })
 
+test_that('it can calculate removals', {
+  x <- tracked_environment(list2env(list(x = 1)))
+  rm('x', envir = x)
+  patch <- objectdiff(x, x)
+
+  y <- tracked_environment(list2env(list(x = 1)))
+  patch(y)
+  expect_is(y, 'tracked_environment')
+  expect_null(y$x)
+})
+
+test_that('it can calculate additions', {
+  x <- tracked_environment()
+  x$x <- 1
+  patch <- objectdiff(x, x)
+
+  y <- tracked_environment()
+  patch(y)
+  expect_is(y, 'tracked_environment')
+  expect_equal(y$x, 1)
+})
+
+test_that('it can calculate modifications', {
+  x <- tracked_environment()
+  x <- tracked_environment(list2env(list(x = 1)))
+  x$x <- 2
+  patch <- objectdiff(x, x)
+
+  y <- tracked_environment(list2env(list(x = 3)))
+  patch(y)
+  expect_is(y, 'tracked_environment')
+  expect_equal(y$x, 2)
+})
+
 # TODO: (RK) Add way more!
 
 

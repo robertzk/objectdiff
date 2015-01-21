@@ -3,3 +3,6 @@ vignettes/*.md
 
 **/.DS_Store
 
+objectdiff.Rcheck/
+*.tar.gz
+
