@@ -65,7 +65,7 @@ trivial_patch <- function(object) {
 #'   patch's environment.
 #' @return A bodiless patch with parent base environment.
 #' @examples
-#' p <- patch_template(list(a = 1), { a + object })
+#' p <- objectdiff:::patch_template(list(a = 1), { a + object })
 #' # function(object) { a + object } 
 #' # with environment containing a = 1
 #' stopifnot(p(1) == 2)
