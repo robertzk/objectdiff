@@ -12,6 +12,15 @@ test_that('it can patch a non-trivial list to the trivial list', {
   expect_diff(as.list(1:10), list(), small = TRUE)
 })
 
+test_that('it can patch the trivial list to a non-trivial named list', {
+  expect_diff(list(), setNames(as.list(1:10), letters[1:10]), small = TRUE, trivial = FALSE)
+})
+
+test_that('it can patch a named non-trivial list to the trivial list', {
+  expect_diff(setNames(as.list(1:10), letters[1:10]), structure(list(), names = character(0)),
+              small = TRUE, trivial = FALSE)
+})
+
 test_that('it can patch a huge list with only a tiny change', {
   x <- as.list(1:10000)
   y <- x
