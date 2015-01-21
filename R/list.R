@@ -78,8 +78,8 @@ homogeneous_list_patch <- function(old_object, new_object) {
 #' @param list The list object whose size we are estimating.
 #' @param sampling_percentage numeric. Default is \code{0.05}.
 estimate_size <- function(list, sampling_percentage = 0.05) {
-  if (!is.list(list)) object.size(list)
-  else if ((len <- length(list)) <= 10) object.size(list)
+  if (!is.list(list)) { object.size(list) }
+  else if ((len <- length(list)) <= 10) { object.size(list) }
   else {
     chunk <- max(10, ceiling(len * sampling_percentage))
     sum(vapply(list[sample.int(len, size = chunk, replace = TRUE)],
