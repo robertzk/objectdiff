@@ -1,3 +1,10 @@
+# Version 0.2.2
+
+ * Better list and data.frame patches. In particular, additions and deletions from
+   a list (or data.frame) will not make a full copy of the object.
+
+ * [Data.frame row removal is fixed.](https://github.com/robertzk/objectdiff/issues/35)
+
 # Version 0.2.1
 
 * A new exported function `force_push`. It allows a `tracked_environment` to revert

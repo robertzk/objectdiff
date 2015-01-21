@@ -1,7 +1,7 @@
 Package: objectdiff
 Type: Package
 Title: Objectdiff
-Version: 0.2.1
+Version: 0.2.2
 Description: Objectdiff is an R package for measuring differences
     between arbitrary R objects using patches, a la Git. For example,
     if you have slightly modified a data.frame, and you would like to
