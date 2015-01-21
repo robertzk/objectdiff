@@ -61,11 +61,13 @@ homogeneous_list_patch <- function(old_object, new_object) {
   # This takes 50ms on a 20k element list!
   differ <- !mapply(identical, old_object, new_object) # Note they are the same length.
 
-  if (mean(differ) > 0.5 && !wide) # If most differ in long list, just replace outright.
-    return(trivial_patch(new_object))
-
-  # For wide lists, it may always be beneficial to use a differences patch.
-  differences_patch(old_object, new_object, differ)
+  if (mean(differ) > 0.5 && !wide) {
+    # If most differ in long list, just replace outright.
+    trivial_patch(new_object)
+  } else {
+    # For wide lists, it may always be beneficial to use a differences patch.
+    differences_patch(old_object, new_object, differ)
+  }
 }
 
 #' Estimate the size of a list stochastically.
