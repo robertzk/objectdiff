@@ -13,6 +13,7 @@ diff <- function(old_object, new_object) {
 #' Compute a patch of deletions on a recursive object.
 #' 
 #' @inheritParams objectdiff
+#' @export
 deletions <- function(old_object, new_object) {
   UseMethod("deletions")
 }
@@ -20,6 +21,7 @@ deletions <- function(old_object, new_object) {
 #' Compute a patch of modifications on a recursive object.
 #' 
 #' @inheritParams objectdiff
+#' @export
 modifications <- function(old_object, new_object) {
   UseMethod("modifications")
 }
@@ -27,6 +29,7 @@ modifications <- function(old_object, new_object) {
 #' Compute a patch of additions on a recursive object.
 #' 
 #' @inheritParams objectdiff
+#' @export
 additions <- function(old_object, new_object) {
   UseMethod("additions")
 }
