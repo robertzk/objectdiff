@@ -15,7 +15,7 @@ Depends:
     R (>= 3.0.0)
 Imports:
     methods,
-    lowliner
+    purrr
 Suggests:
     testthat,
     testthatsomemore,
