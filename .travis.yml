@@ -1,7 +1,7 @@
 language: r
 r_packages:
   - testthat
-github_packages:
+r_github_packages:
   - robertzk/testthatsomemore
   - hadley/purrr
 notifications:
