@@ -175,7 +175,9 @@ differences_patch <- function(old_object, new_object, differences) {
 #' @rdname patch
 attributes_patch <- function(old_object, new_object) {
   patch <- function(object) {
-    attributes(object) <- patch_attributes(attributes(object))
+    # TODO: (RK) Fix row names patching
+    attributes(object)[good <- (names(attributes(object)) != "row.names")] <-
+      patch_attributes(attributes(object)[good])
     object
   }
   environment(patch) <- new.env(parent = baseenv())
