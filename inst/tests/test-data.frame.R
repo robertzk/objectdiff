@@ -16,4 +16,10 @@ test_that('it can record dropping of rows #35', {
   expect_diff(iris, iris[1:100, ])
 })
 
+# https://github.com/robertzk/objectdiff/issues/52
+test_that('it ignores row.names during patching', {
+  x <- iris; y <- x
+  attr(y, "row.names") <- letters
+  expect_identical(objectdiff(x, y)(x), x)
+})
 

@@ -4,9 +4,14 @@
 #' @include objectdiff.R diff.R diff_list.R
 setMethod('objectdiff', signature = c('data.frame', 'data.frame'),
   definition = function(old_object, new_object) {
-    if (NROW(old_object) < NROW(new_object)) { 
+    # TODO: (RK) Don't break on 0-column data.frames
+    old_nrow <- length(old_object[[1]])
+    # Note that NROW gives the wrong answer if row.names are artificially changed
+    new_nrow <- length(new_object[[1]])
+
+    if (old_nrow < new_nrow) { 
       trivial_patch(new_object)
-    } else if (NROW(old_object) > NROW(new_object)) {
+    } else if (old_nrow > new_nrow) {
       # TODO: (RK) Use C++ for this, since it is probably slow. 
       old_rownames <- row.names(old_object)
       new_rownames <- row.names(new_object)
