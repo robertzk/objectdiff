@@ -175,7 +175,7 @@ differences_patch <- function(old_object, new_object, differences) {
 #' @rdname patch
 attributes_patch <- function(old_object, new_object) {
   # TODO: (RK) Fix row names patching
-  ignored_attributes <- "row.names"
+  ignored_attributes <- c("row.names", "class")
 
   patch <- function(object) {
     good <- !is.element(names(attributes(object)), ignored_attributes)
