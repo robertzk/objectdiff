@@ -190,7 +190,7 @@ attributes_patch <- function(old_object, new_object) {
   patch <- function(object) {
     good <- !is.element(names(attributes(object)), ignored_attributes)
     attributes(object) <-
-      c(patch_attributes(attributes(object)),
+      c(patch_attributes(attributes(object)[good]),
         attributes(object)[intersect(names(attributes(object)), ignored_attributes)])
     object
   }
