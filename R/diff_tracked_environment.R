@@ -16,7 +16,7 @@ deletions.tracked_environment <- function(old_object, new_object) {
   deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
 
   if (length(deletions) == 0) {
-    return(identity_patch())
+    identity_patch()
   } else {
     patch_template(list(deletions = deletions), {
       objectdiff::rm(list = deletions, envir = object)
@@ -58,13 +58,16 @@ additions.tracked_environment <- function(old_object, new_object) {
   if (num_changed == 0) { identity_patch() } 
   else {
     additions <- setdiff(ls(new_object, all = TRUE), new_object%$%universe)
-    patch_template(list(new_objects = setNames(nm = additions, 
-      lapply(additions, function(name) new_object[[name]]))), {
-      for (obj in names(new_objects)) {
-        object[[obj]] <- new_objects[[obj]]
-      }
-      object
-    })
+
+    if (length(additions) > 0) {
+      patch_template(list(new_objects = setNames(nm = additions, 
+        lapply(additions, function(name) new_object[[name]]))), {
+        for (obj in names(new_objects)) {
+          object[[obj]] <- new_objects[[obj]]
+        }
+        object
+      })
+    } else { identity_patch() }
   }
 }
 
