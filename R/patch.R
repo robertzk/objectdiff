@@ -174,13 +174,23 @@ differences_patch <- function(old_object, new_object, differences) {
 #' @inheritParams atomic_differences_patch
 #' @rdname patch
 attributes_patch <- function(old_object, new_object) {
+  attributes_patch <- trivial_patch(attributes(new_object))
+  patch <- function(object) {
+    attributes(object) <- attributes_patch()
+    object
+  }
+  environment(patch) <-
+    list2env(list(attributes_patch = attributes_patch), parent = baseenv())
+  return(as.patch(patch))
+
+  # TODO: (RK) Fix attributes patching. It depends on correct list diffing.
   # TODO: (RK) Fix row names patching
-  ignored_attributes <- c("row.names", "class")
+  ignored_attributes <- "row.names"
 
   patch <- function(object) {
     good <- !is.element(names(attributes(object)), ignored_attributes)
     attributes(object) <-
-      c(patch_attributes(attributes(object)[good]),
+      c(patch_attributes(attributes(object)),
         attributes(object)[intersect(names(attributes(object)), ignored_attributes)])
     object
   }
