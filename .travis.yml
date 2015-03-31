@@ -7,9 +7,12 @@ install:
 - "./travis-tool.sh install_deps"
 - "./travis-tool.sh install_github hadley/testthat hadley/purrr"
 - "./travis-tool.sh install_r testthatsomemore"
+- "./travis-tool.sh github_package jimhester/covr"
 script: "./travis-tool.sh run_tests"
 after_failure:
 - "./travis-tool.sh dump_logs"
+after_success:
+  - "Rscript -e 'library(covr);coveralls()'"
 notifications:
   email:
     on_success: change
