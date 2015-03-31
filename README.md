@@ -1,4 +1,4 @@
-Git-like object patching for R [![Build Status](https://travis-ci.org/robertzk/objectdiff.svg?branch=master)](https://travis-ci.org/robertzk/objectdiff)
+Git-like object patching for R [![Build Status](https://travis-ci.org/robertzk/objectdiff.svg?branch=master)](https://travis-ci.org/robertzk/objectdiff) [![Coverage Status](https://coveralls.io/repos/robertzk/objectdiff/badge.svg)](https://coveralls.io/r/robertzk/objectdiff)
 ==========
 
 Intended to be used in conjunction with caching [stagerunners](http://github.com/robertzk/stagerunner),
