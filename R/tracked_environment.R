@@ -59,6 +59,7 @@ setClass('tracked_environment')
 
 #' @export
 ls <- function(name, ...) UseMethod('ls')
+#' @method ls tracked_environment
 #' @export
 ls.tracked_environment <- function(name, ...) base::ls(environment(name), ...)
 #' @export
@@ -76,8 +77,10 @@ rm <- function(..., envir = as.environment(-1)) {
 
 #' @export
 as.environment <- function(...) UseMethod('as.environment')
+#' @method as.environment tracked_environment
 #' @export
 as.environment.tracked_environment <- function(env) { env%$%env }
+#' @method as.environment environment
 #' @export
 as.environment.environment <- function(...) ..1
 #' @export
@@ -86,6 +89,7 @@ as.environment.default <-
 
 #' @export
 environment <- function(fun) UseMethod('environment')
+#' @method environment function
 #' @export
 environment.function <- function(fun) base::environment(fun)
 #' @export
@@ -94,6 +98,7 @@ environment.default <- function(fun) {
   call[[1]] <- base::environment
   eval.parent(call)
 }
+#' @method environment tracked_environment
 #' @export
 environment.tracked_environment <- function(fun) { as.environment(fun) }
 #' @export
@@ -101,12 +106,16 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 
 #' @export
 `environment<-` <- function(env, value) UseMethod('environment<-')
+#' @method environment<- function
+#' @export
 #' @export
 `environment<-.function` <- function(env, value) base::`environment<-`(env, value)
+#' @method environment<- character
 #' @export
 `environment<-.character` <- function(env, value) base::`environment<-`(env, value)
 #' @export
 `environment<-.default` <- function(env, value) base::`environment<-`(env, value)
+#' @method environment<- tracked_environment
 #' @export
 `environment<-.tracked_environment` <- function(env, value) {
   stop("Cannot assign environment of a tracked_environment directly.")
@@ -116,12 +125,14 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 `parent.env` <- function(env) UseMethod("parent.env")
 #' @export
 `parent.env.default` <- function(env) base::`parent.env`(env)
+#' @method parent.env tracked_environment
 #' @export
 `parent.env.tracked_environment` <- function(env) { base::`parent.env`(env%$%env) }
 #' @export
 `parent.env<-` <- function(env, value) UseMethod("parent.env<-")
 #' @export
 `parent.env<-.default` <- function(env, value) base::`parent.env<-`(env, value)
+#' @method parent.env<- tracked_environment
 #' @export
 `parent.env<-.tracked_environment` <- function(env, value) {
   base::`parent.env<-`(env%$%env, value)
@@ -148,6 +159,7 @@ is.tracked_environment <- function(x) { is(x, 'tracked_environment') }
 #' @param env tracked_environment.
 #' @param value character. Commit message. May be \code{NULL}.
 #' @rdname commit
+#' @method commit<- tracked_environment
 #' @export
 #' @examples
 #' x <- tracked_environment()
@@ -191,6 +203,7 @@ commits <- function(env) {
 #'   number to go back to a future commit. It is the user's responsibility
 #'   to ensure that the commit stack does not become corrupt. 
 #' @note Rolling back 0 commits clears the current staged changes.
+#' @method rollback<- tracked_environment
 #' @param value integer. Number of commits to roll back.
 `rollback<-.tracked_environment` <- function(env, silent = FALSE, value) {
   stopifnot(is.numeric(value))
@@ -320,6 +333,7 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
   }
 }
 
+#' @method [[ tracked_environment
 #' @export
 `[[.tracked_environment` <- function(env, name) {
   if (exists(name, envir = environment(env), inherits = FALSE))
@@ -327,9 +341,11 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
   else NULL
 }
 
+#' @method $ tracked_environment
 #' @export
 `$.tracked_environment` <- `[[.tracked_environment`
 
+#' @method $<- tracked_environment
 #' @export
 `$<-.tracked_environment` <- function(env, name, value) {
   assign_call <- quote(`[[<-`(env, name, value))
@@ -338,6 +354,7 @@ get <- function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits
   env
 }
 
+#' @method [[<- tracked_environment
 #' @export
 `[[<-.tracked_environment` <- function(env, name, value) {
   # Record the before-value in the ghost environment.

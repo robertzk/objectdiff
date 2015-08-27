@@ -1,6 +1,7 @@
 # TODO: (RK) This fails on unnamed lists.
 #' @include diff.R
 
+#' @method deletions list
 #' @export
 deletions.list <- function(old_object, new_object) {
   deletions <- setdiff(names(old_object), names(new_object))
@@ -13,6 +14,7 @@ deletions.list <- function(old_object, new_object) {
   }
 }
 
+#' @method modifications list
 #' @export
 modifications.list <- function(old_object, new_object) {
   additions   <- setdiff(names(new_object), names(old_object))
@@ -32,6 +34,7 @@ modifications.list <- function(old_object, new_object) {
   }
 }
 
+#' @method additions list
 #' @export
 additions.list <- function(old_object, new_object) {
   additions   <- setdiff(names(new_object), names(old_object))

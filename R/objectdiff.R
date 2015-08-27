@@ -9,7 +9,7 @@
 #' @name patch-class
 #' @family patching functions
 #' @export
-setClass('patch', contains = 'function')
+setClass('patch', contains = "function")
 
 #' Generate patch to turn one R object into another.
 #'
@@ -48,7 +48,7 @@ setGeneric("objectdiff",
   def = function(old_object, new_object, ...) standardGeneric("objectdiff"),
   valueClass = "patch")
 
-setMethod('objectdiff', signature = c('ANY', 'ANY'),
+setMethod("objectdiff", signature = c("ANY", "ANY"),
   definition = function(old_object, new_object) {
     if (identical(old_object, new_object)) identity_patch()
     else trivial_patch(new_object)

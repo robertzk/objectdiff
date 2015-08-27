@@ -2,7 +2,7 @@
 #'
 #' @inheritParams objectdiff
 #' @include objectdiff.R diff.R diff_list.R
-setMethod('objectdiff', signature = c('data.frame', 'data.frame'),
+setMethod("objectdiff", signature = c("data.frame", "data.frame"),
   definition = function(old_object, new_object) {
     # TODO: (RK) Don't break on 0-column data.frames
     old_nrow <- length(old_object[[1]])
@@ -39,10 +39,13 @@ setMethod('objectdiff', signature = c('data.frame', 'data.frame'),
     }
   })
 
+#' @method deletions data.frame
 #' @export
 deletions.data.frame     <- deletions.list
+#' @method additions data.frame
 #' @export
 additions.data.frame     <- additions.list
+#' @method modifications data.frame
 #' @export
 modifications.data.frame <- modifications.list
 
