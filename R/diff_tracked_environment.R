@@ -11,6 +11,7 @@ setMethod('objectdiff', signature = c('tracked_environment', 'tracked_environmen
     as.patch(diff(old_object, new_object))
   })
 
+#' @method deletions tracked_environment
 #' @export
 deletions.tracked_environment <- function(old_object, new_object) {
   deletions <- setdiff(new_object%$%universe, ls(new_object, all = TRUE))
@@ -25,6 +26,7 @@ deletions.tracked_environment <- function(old_object, new_object) {
   }
 }
 
+#' @method modifications tracked_environment
 #' @export
 modifications.tracked_environment <- function(old_object, new_object) {
   num_changed <- length(ls(new_object%$%ghost, all = TRUE))
@@ -51,6 +53,7 @@ modifications.tracked_environment <- function(old_object, new_object) {
   }
 }
 
+#' @method additions tracked_environment
 #' @export
 additions.tracked_environment <- function(old_object, new_object) {
   num_changed <- length(ls(new_object%$%ghost, all = TRUE))
