@@ -1,3 +1,7 @@
+# Version 0.2.4
+
+ * Removed dependency on purrr package.
+
 # Version 0.2.2
 
  * Better list and data.frame patches. In particular, additions and deletions from
