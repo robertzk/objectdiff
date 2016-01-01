@@ -83,4 +83,7 @@ test_that('it can drop named list elements without a full patch', {
   expect_diff(iris, iris[-1], trivial = FALSE)
 })
 
+test_that("it preserves attributes during a list modifications", {
+  expect_diff(list(x = 1, y = 2), structure(list(x = 1, y = 2, z = 3), moop = "blop"))
+})
 

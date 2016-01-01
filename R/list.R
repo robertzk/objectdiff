@@ -2,7 +2,7 @@
 #'
 #' @inheritParams objectdiff
 #' @include objectdiff.R
-setMethod('objectdiff', signature = c('list', 'list'),
+setMethod("objectdiff", signature = c("list", "list"),
   definition = function(old_object, new_object) {
     if (identical(old_object, new_object)) { identity_patch() }
     else if (length(old_object) != length(new_object) ||

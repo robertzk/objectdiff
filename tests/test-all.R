@@ -1,3 +1,4 @@
 library(testthat)
 library(objectdiff)
-test_check('objectdiff')
+
+test_check("objectdiff")
