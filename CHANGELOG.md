@@ -1,6 +1,7 @@
 # Version 0.2.3.9000
 
- * Started development version of 0.2.3.
+ * Started development version of 0.2.3. Fixed attribute patching when
+   two lists are passed to `objectdiff`.
 
 # Version 0.2.2
 
