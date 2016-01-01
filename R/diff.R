@@ -3,11 +3,12 @@
 #' @param old_object list or tracked_environment.
 #' @param new_object list or tracked_environment.
 diff <- function(old_object, new_object) {
-  list(deletions = deletions, modifications = modifications, additions = additions) %>%
+  patches <-
+    list(deletions = deletions, modifications = modifications, additions = additions) %>%
     invoke(old_object, new_object) %>%
-    Filter(f = Negate(is.identity_patch)) %>%
-    map_call(compose) %>%
-    as.patch()
+    Filter(f = Negate(is.identity_patch))
+
+  as.patch(do.call(compose, patches))
 }
 
 #' Compute a patch of deletions on a recursive object.
