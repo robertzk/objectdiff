@@ -63,7 +63,8 @@ trivial_patch <- function(object) {
 #' Create a patch from environment injected objects and body.
 #' @param provides list. Objects to inject into the 
 #'   patch's environment.
-#' @return A bodiless patch with parent base environment.
+#' @param body expression. The body to use for the patch.
+#' @return A patch with parent base environment and body \code{body}.
 #' @examples
 #' p <- objectdiff:::patch_template(list(a = 1), { a + object })
 #' # function(object) { a + object } 
