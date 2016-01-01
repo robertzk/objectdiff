@@ -38,3 +38,4 @@ Collate:
     'patch.R'
     'squish.R'
     'utils.R'
+RoxygenNote: 5.0.1
