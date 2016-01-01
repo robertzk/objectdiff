@@ -2,7 +2,7 @@
 #'
 #' @inheritParams objectdiff
 #' @include objectdiff.R
-setMethod('objectdiff', signature = c('list', 'list'),
+setMethod("objectdiff", signature = c("list", "list"),
   definition = function(old_object, new_object) {
     if (identical(old_object, new_object)) { identity_patch() }
     else if (length(old_object) != length(new_object) ||
@@ -24,7 +24,11 @@ heterogeneous_list_patch <- function(old_object, new_object) {
       anyDuplicated(names(old_object)) > 0 || anyDuplicated(names(new_object)) > 0) {
     trivial_patch(new_object)
   } else {
-    as.patch(compose(diff(old_object, new_object), reorder_names_patch(new_object)))
+    as.patch(compose(diff(old_object, new_object),
+                     reorder_names_patch(new_object),
+                     if (!identical(attributes(old_object), attributes(new_object))) {
+                       attributes_patch(old_object, new_object)
+                     }))
   }
 }
 

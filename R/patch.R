@@ -63,7 +63,8 @@ trivial_patch <- function(object) {
 #' Create a patch from environment injected objects and body.
 #' @param provides list. Objects to inject into the 
 #'   patch's environment.
-#' @return A bodiless patch with parent base environment.
+#' @param body expression. The body to use for the patch.
+#' @return A patch with parent base environment and body \code{body}.
 #' @examples
 #' p <- objectdiff:::patch_template(list(a = 1), { a + object })
 #' # function(object) { a + object } 
@@ -174,14 +175,10 @@ differences_patch <- function(old_object, new_object, differences) {
 #' @inheritParams atomic_differences_patch
 #' @rdname patch
 attributes_patch <- function(old_object, new_object) {
-  attributes_patch <- trivial_patch(attributes(new_object))
-  patch <- function(object) {
-    attributes(object) <- attributes_patch()
+  return(patch_template(list(new_attributes = attributes(new_object)), {
+    attributes(object) <- new_attributes
     object
-  }
-  environment(patch) <-
-    list2env(list(attributes_patch = attributes_patch), parent = baseenv())
-  return(as.patch(patch))
+  }))
 
   # TODO: (RK) Fix attributes patching. It depends on correct list diffing.
   # TODO: (RK) Fix row names patching
