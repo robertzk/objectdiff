@@ -1,3 +1,7 @@
+# Version 0.2.3.9000
+
+ * Started development version of 0.2.3.
+
 # Version 0.2.2
 
  * Better list and data.frame patches. In particular, additions and deletions from
