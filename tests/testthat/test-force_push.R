@@ -60,3 +60,15 @@ test_that("it can overwrite commits after a force push backward", {
   expect_identical(as.list(as.environment(env)), list(x = 1, y = 2))
 })
 
+test_that("replaying the current commit is a no-op", {
+  with_mock(copy_env = function(...) { stop("copy invoked") }, {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    rollback(env) <- 0 # No error expected!
+    env$x <- 2
+    expect_error(rollback(env) <- 0, "copy invoked")
+    env$x <- 2
+    expect_error(force_push(env, 1), "copy invoked")
+  })
+})
+
