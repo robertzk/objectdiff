@@ -1,3 +1,8 @@
+# Version 0.2.3.9001
+
+ * Added an optimization to `replay` that avoids re-building an environment
+   when it is already at the desired commit.
+
 # Version 0.2.3.9000
 
  * Started development version of 0.2.3. Fixed attribute patching when
