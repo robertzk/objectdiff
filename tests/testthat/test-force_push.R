@@ -1,9 +1,8 @@
-library(testthatsomemore)
 context('force_push')
 
 test_that("it can force push to the zeroth commit", {
   env <- tracked_environment()
-  assert(force_push(env, 0))
+  force_push(env, 0)
 })
 
 test_that("it can force push back to the zeroth commit", {
@@ -58,5 +57,17 @@ test_that("it can overwrite commits after a force push backward", {
   expect_identical(as.list(as.environment(env)), list(x = 1, y = 2, z = 3))
   rollback(env) <- 1
   expect_identical(as.list(as.environment(env)), list(x = 1, y = 2))
+})
+
+test_that("replaying the current commit is a no-op", {
+  with_mock(`objectdiff:::copy_env` = function(...) { stop("copy invoked") }, {
+    env <- tracked_environment()
+    env$x <- 1; commit(env) <- 'first'
+    rollback(env) <- 0 # No error expected!
+    env$x <- 2
+    expect_error(rollback(env) <- 0, "copy invoked")
+    env$x <- 2
+    expect_error(force_push(env, 1), "copy invoked")
+  })
 })
 

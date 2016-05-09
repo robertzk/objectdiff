@@ -42,7 +42,9 @@ tracked_environment <- function(env = new.env(parent = emptyenv()), snapshot = 1
   }
 
   initial <- new.env(parent = emptyenv())
-  copy_env(initial, env)
+  if (length(env) > 0L) {
+    copy_env(initial, env)
+  }
 
   structure(class = c('tracked_environment', 'environment'),
             list2env(parent = emptyenv(),
@@ -381,6 +383,12 @@ assign <- function(x, value, envir, ...) {
 
 replay <- function(env, count, silent = FALSE) {
   stopifnot(is.tracked_environment(env))
+
+  # If the current commit head is the same as the commit we are replaying to
+  # and no unstaged changes exist on the environment, there is no work to do.
+  if (count == (env%$%commits)$head() && length(env%$%ghost) == 0L) {
+    return(env)
+  }
 
   snapshot <- env%$%snapshot
   reference_index <-
