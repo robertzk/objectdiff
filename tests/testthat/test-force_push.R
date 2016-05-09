@@ -61,7 +61,7 @@ test_that("it can overwrite commits after a force push backward", {
 })
 
 test_that("replaying the current commit is a no-op", {
-  with_mock(objectdiff:::copy_env = function(...) { stop("copy invoked") }, {
+  with_mock(`objectdiff:::copy_env` = function(...) { stop("copy invoked") }, {
     env <- tracked_environment()
     env$x <- 1; commit(env) <- 'first'
     rollback(env) <- 0 # No error expected!
