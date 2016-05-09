@@ -1,8 +1,7 @@
 context('tracked environment')
-library(testthatsomemore)
 
 test_that('it can create a tracked_environment', {
-  assert(tracked_environment(new.env()))
+  tracked_environment(new.env()) # Expect no error
 })
 
 test_that('it can check that something is a tracked environment', {
