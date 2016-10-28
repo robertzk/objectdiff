@@ -78,6 +78,11 @@ rm <- function(..., envir = as.environment(-1)) {
 }
 
 #' @export
+exists <- function(..., envir = as.environment(-1)) {
+  base::exists(..., envir = if (is.tracked_environment(envir)) environment(envir) else envir)
+}
+
+#' @export
 as.environment <- function(...) UseMethod('as.environment')
 #' @method as.environment tracked_environment
 #' @export
