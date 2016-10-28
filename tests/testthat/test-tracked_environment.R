@@ -167,3 +167,8 @@ test_that("it allows parent.env assignment", {
   expect_identical(parent.env(environment(x)), w)
 })
 
+test_that("it correctly uses the exists function", {
+  x <- tracked_environment(list2env(list(y = 1)))
+  expect_true(exists("y", envir = x))
+})
+
