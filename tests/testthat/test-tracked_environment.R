@@ -167,3 +167,31 @@ test_that("it allows parent.env assignment", {
   expect_identical(parent.env(environment(x)), w)
 })
 
+test_that("it correctly uses the exists function", {
+  x <- tracked_environment(list2env(list(y = 1)))
+  expect_true(exists("y", envir = x))
+  expect_false(exists("z", envir = x))
+  expect_true(exists("y", env = x))
+  expect_false(exists("z", env = x))
+})
+
+test_that("it correctly uses the exists function with inherits = FALSE", {
+  x <- tracked_environment(list2env(list(y = 1), parent = list2env(list(z = 1))))
+  expect_true(exists("z", envir = x))
+  expect_false(exists("z", envir = x, inherits = FALSE))
+  expect_true(exists("z", env = x))
+  expect_false(exists("z", env = x, inherits = FALSE))
+})
+
+test_that("it correctly uses the exists function for vanilla environments", {
+  x <- list2env(list(y = 1), parent = list2env(list(z = 1)))
+  expect_true(exists("y", envir = x))
+  expect_false(exists("w", envir = x))
+  expect_true(exists("z", envir = x))
+  expect_false(exists("z", envir = x, inherits = FALSE))
+  expect_true(exists("y", env = x))
+  expect_false(exists("w", env = x))
+  expect_true(exists("z", env = x))
+  expect_false(exists("z", env = x, inherits = FALSE))
+})
+

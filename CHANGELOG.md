@@ -1,3 +1,7 @@
+# Version 0.2.3.9002
+
+* Implement an `exists` method for `tracked_environment` objects.
+
 # Version 0.2.3.9001
 
  * Added an optimization to `replay` that avoids re-building an environment
