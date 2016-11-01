@@ -73,8 +73,11 @@ ls.default <- function(...) {
 
 #' @export
 rm <- function(..., envir = as.environment(-1)) {
-  base::rm(..., envir =
-    if (is.tracked_environment(envir)) environment(envir) else envir)
+  if (is.tracked_environment(envir)) {
+    eval.parent(substitute(base::rm(..., envir = base::get("env", envir))))
+  } else {
+    eval.parent(substitute(base::rm(..., envir = envir)))
+  }
 }
 
 #' @export

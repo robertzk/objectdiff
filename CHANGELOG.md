@@ -1,3 +1,7 @@
+# Version 0.2.3.9003
+
+* Fix broken usage of `rm` in global context.
+
 # Version 0.2.3.9002
 
 * Implement an `exists` method for `tracked_environment` objects.
