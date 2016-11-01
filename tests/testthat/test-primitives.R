@@ -23,6 +23,12 @@ test_that('it does not break the rm function', {
   expect_false('x' %in% ls())
 })
 
+test_that('it does not break the rm function II', {
+  x <- 1
+  rm('x')
+  expect_false('x' %in% ls())
+})
+
 test_that('it does not break parent.env', {
   x <- new.env()
   y <- new.env(parent = x)
